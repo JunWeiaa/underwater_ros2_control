@@ -17,9 +17,9 @@
   <depend>pluginlib</depend>
   <depend>rcpputils</depend>
   <depend>realtime_tools</depend>
-  <depend>Eigen3</depend>
+  <depend>eigen</depend>
   <depend>tf2_ros</depend>
-  <depend>Boost</depend>
+  <depend>boost</depend>
   <depend>std_msgs</depend>
   <depend>geometry_msgs</depend>
   <depend>sensor_msgs</depend>
