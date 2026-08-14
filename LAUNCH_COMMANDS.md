@@ -19,7 +19,7 @@ source install/setup.bash
 Recommended namespace is `rov1`, so the command topics are `/rov1/control_input` and `/rov1/cmd_vel`.
 
 ```bash
-ros2 launch bluerov2_heavy visualize.launch.py \
+ros2 launch bluerov2_heavy gz.launch.py \
   robot_name:=bluerov2_heavy \
   robot_namespace:=rov1 \
   x:=0.0 \
@@ -49,7 +49,7 @@ ros2 launch subcat gz.launch.py \
 Terminal 1:
 
 ```bash
-ros2 launch bluerov2_heavy visualize.launch.py \
+ros2 launch bluerov2_heavy gz.launch.py \
   robot_name:=bluerov2_heavy_1 \
   robot_namespace:=rov1 \
   x:=0.0 \
@@ -63,7 +63,7 @@ ros2 launch bluerov2_heavy visualize.launch.py \
 Terminal 2:
 
 ```bash
-ros2 launch bluerov2_heavy visualize.launch.py \
+ros2 launch bluerov2_heavy gz.launch.py \
   robot_name:=bluerov2_heavy_2 \
   robot_namespace:=rov2 \
   x:=3.0 \
@@ -113,7 +113,7 @@ The second Subcat launch also reuses existing Gazebo, RViz, and `/clock` by defa
 Terminal 1:
 
 ```bash
-ros2 launch bluerov2_heavy visualize.launch.py \
+ros2 launch bluerov2_heavy gz.launch.py \
   robot_name:=bluerov2_heavy_1 \
   robot_namespace:=rov1 \
   x:=0.0 \
