@@ -504,7 +504,7 @@ Use `merge_tf:=true` and give every robot a unique `robot_namespace`. When `merg
 ros2 launch keyboard_input keyboard.launch.py use_tty:=true
 ```
 
-## Development, Testing, and Contributing
+## Development
 
 ### Development Guidelines
 
@@ -513,42 +513,9 @@ ros2 launch keyboard_input keyboard.launch.py use_tty:=true
 - When changing real-hardware output mapping, update the URDF/xacro, `real.yaml`, and the safety notes.
 - Keep `colcon build`, `colcon test`, and launch smoke tests reproducible before submitting changes.
 
-### Testing
-
-Run package tests:
-
-```bash
-cd ~/underwater_ws
-colcon test --packages-select \
-  acados_nmpc_controller \
-  gz_underwater_hardware \
-  real_underwater_hardware \
-  keyboard_input
-colcon test-result --verbose
 ```
 
-The explicit unit test currently lives in `real_underwater_hardware/test/test_load_real_system.cpp`. Other packages mostly rely on linting, compilation, and launch/smoke testing.
 
-### Contributing
-
-Issues and pull requests are welcome:
-
-1. Describe the problem, reproduction steps, expected behavior, and runtime environment.
-2. Keep changes focused. Avoid mixing formatting, refactoring, and functional changes in one PR.
-3. Add usage notes, configuration examples, and tests for new features.
-4. For real-hardware control, PWM mapping, coordinate frames, or solver constraints, describe the safety impact explicitly.
-
-### Security and Safety Reports
-
-If you find an issue that could cause unexpected thruster output, servo overtravel, emergency-stop failure, or real-vehicle loss of control, prefer a private maintainer contact or the repository's private security-reporting channel. If only a public issue is available, avoid posting complete dangerous reproduction steps.
-
-## Roadmap
-
-- Add CI and launch smoke tests.
-- Add broader controller unit tests.
-- Document the acados solver regeneration workflow.
-- Normalize package descriptions, maintainers, and license fields across `package.xml` files.
-- Add real-hardware calibration, RC channel mapping, and servo direction check tools.
 
 ## License and Acknowledgements
 
