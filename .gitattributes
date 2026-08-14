@@ -1,0 +1,3 @@
+# Exclude generated acados/MATLAB solver sources from GitHub Linguist stats.
+descriptions/**/matlab/c_generated_code/** linguist-generated=true
+controllers/acados_nmpc_controller/solvers/**/c_generated_code/** linguist-generated=true
