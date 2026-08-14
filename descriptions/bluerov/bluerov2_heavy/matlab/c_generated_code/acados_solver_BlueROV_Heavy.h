@@ -40,7 +40,7 @@
 #define BLUEROV_HEAVY_NZ     0
 #define BLUEROV_HEAVY_NU     8
 #define BLUEROV_HEAVY_NP     13
-#define BLUEROV_HEAVY_NP_GLOBAL     8
+#define BLUEROV_HEAVY_NP_GLOBAL     0
 #define BLUEROV_HEAVY_NBX    0
 #define BLUEROV_HEAVY_NBX0   13
 #define BLUEROV_HEAVY_NBU    8
@@ -65,7 +65,7 @@
 #define BLUEROV_HEAVY_NY     0
 #define BLUEROV_HEAVY_NYN    0
 #define BLUEROV_HEAVY_N      20
-#define BLUEROV_HEAVY_NH     6
+#define BLUEROV_HEAVY_NH     0
 #define BLUEROV_HEAVY_NHN    0
 #define BLUEROV_HEAVY_NH0    0
 #define BLUEROV_HEAVY_NPHI0  0
@@ -96,7 +96,6 @@ typedef struct BlueROV_Heavy_solver_capsule
 
     /* external functions */
 
-    external_function_casadi p_global_precompute_fun;
     // dynamics
 
     external_function_external_param_casadi *expl_vde_forw;
@@ -130,10 +129,6 @@ typedef struct BlueROV_Heavy_solver_capsule
 
 
     // constraints
-    external_function_external_param_casadi *nl_constr_h_fun_jac;
-    external_function_external_param_casadi *nl_constr_h_fun;
-
-
 
 
 

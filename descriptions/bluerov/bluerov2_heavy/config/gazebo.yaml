@@ -53,7 +53,7 @@ acados_nmpc_controller:
     trajectory:
       source: "file"
       target_file: ""
-      target_name: "circle"
+      target_name: "figure8"
       path_frame: "odom"
       dt: 0.001
       prediction_dt: 0.025

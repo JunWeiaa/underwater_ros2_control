@@ -33,7 +33,6 @@ extern "C" {
 #define casadi_fabs CASADI_PREFIX(fabs)
 #define casadi_s0 CASADI_PREFIX(s0)
 #define casadi_s1 CASADI_PREFIX(s1)
-#define casadi_s2 CASADI_PREFIX(s2)
 #define casadi_sq CASADI_PREFIX(sq)
 
 /* Symbol visibility in DLLs */
@@ -64,9 +63,8 @@ casadi_real casadi_fabs(casadi_real x) {
 
 static const casadi_int casadi_s0[3] = {13, 1, 1};
 static const casadi_int casadi_s1[3] = {8, 1, 1};
-static const casadi_int casadi_s2[3] = {88, 1, 1};
 
-/* BlueROV_Heavy_expl_ode_fun:(i0[13],i1[8],i2[13],i3[88])->(o0[13]) */
+/* BlueROV_Heavy_expl_ode_fun:(i0[13],i1[8],i2[13])->(o0[13]) */
 static int casadi_f0(const casadi_real** arg, casadi_real** res, casadi_int* iw, casadi_real* w, int mem) {
   casadi_real a00, a01, a02, a03, a04, a05, a06, a07, a08, a09, a10, a11;
   casadi_real a12, a13, a14, a15, a16, a17, a18, a19, a20, a21, a22, a23;
@@ -177,23 +175,15 @@ static int casadi_f0(const casadi_real** arg, casadi_real** res, casadi_int* iw,
   a05=9.9997012697780208e-01;
   a14=7.0709999999999995e-01;
   a02=arg[1]? arg[1][0] : 0;
-  a06=arg[3]? arg[3][0] : 0;
-  a02=(a02*a06);
   a06=(a14*a02);
   a03=arg[1]? arg[1][1] : 0;
-  a04=arg[3]? arg[3][1] : 0;
-  a03=(a03*a04);
   a04=(a14*a03);
   a06=(a06+a04);
   a11=-7.0709999999999995e-01;
   a15=arg[1]? arg[1][2] : 0;
-  a17=arg[3]? arg[3][2] : 0;
-  a15=(a15*a17);
   a17=(a11*a15);
   a06=(a06+a17);
   a18=arg[1]? arg[1][3] : 0;
-  a19=arg[3]? arg[3][3] : 0;
-  a18=(a18*a19);
   a19=(a11*a18);
   a06=(a06+a19);
   a19=13.;
@@ -237,24 +227,16 @@ static int casadi_f0(const casadi_real** arg, casadi_real** res, casadi_int* iw,
   a31=(a31+a33);
   a34=1.2000000000000000e-01;
   a35=arg[1]? arg[1][4] : 0;
-  a36=arg[3]? arg[3][4] : 0;
-  a35=(a35*a36);
   a36=(a34*a35);
   a31=(a31+a36);
   a36=-1.2000000000000000e-01;
   a37=arg[1]? arg[1][5] : 0;
-  a38=arg[3]? arg[3][5] : 0;
-  a37=(a37*a38);
   a38=(a36*a37);
   a31=(a31+a38);
   a38=arg[1]? arg[1][6] : 0;
-  a39=arg[3]? arg[3][6] : 0;
-  a38=(a38*a39);
   a39=(a34*a38);
   a31=(a31+a39);
   a39=arg[1]? arg[1][7] : 0;
-  a40=arg[3]? arg[3][7] : 0;
-  a39=(a39*a40);
   a40=(a36*a39);
   a31=(a31+a40);
   a40=(a23*a16);
@@ -493,7 +475,7 @@ CASADI_SYMBOL_EXPORT void BlueROV_Heavy_expl_ode_fun_incref(void) {
 CASADI_SYMBOL_EXPORT void BlueROV_Heavy_expl_ode_fun_decref(void) {
 }
 
-CASADI_SYMBOL_EXPORT casadi_int BlueROV_Heavy_expl_ode_fun_n_in(void) { return 4;}
+CASADI_SYMBOL_EXPORT casadi_int BlueROV_Heavy_expl_ode_fun_n_in(void) { return 3;}
 
 CASADI_SYMBOL_EXPORT casadi_int BlueROV_Heavy_expl_ode_fun_n_out(void) { return 1;}
 
@@ -508,7 +490,6 @@ CASADI_SYMBOL_EXPORT const char* BlueROV_Heavy_expl_ode_fun_name_in(casadi_int i
     case 0: return "i0";
     case 1: return "i1";
     case 2: return "i2";
-    case 3: return "i3";
     default: return 0;
   }
 }
@@ -525,7 +506,6 @@ CASADI_SYMBOL_EXPORT const casadi_int* BlueROV_Heavy_expl_ode_fun_sparsity_in(ca
     case 0: return casadi_s0;
     case 1: return casadi_s1;
     case 2: return casadi_s0;
-    case 3: return casadi_s2;
     default: return 0;
   }
 }
@@ -538,7 +518,7 @@ CASADI_SYMBOL_EXPORT const casadi_int* BlueROV_Heavy_expl_ode_fun_sparsity_out(c
 }
 
 CASADI_SYMBOL_EXPORT int BlueROV_Heavy_expl_ode_fun_work(casadi_int *sz_arg, casadi_int* sz_res, casadi_int *sz_iw, casadi_int *sz_w) {
-  if (sz_arg) *sz_arg = 4;
+  if (sz_arg) *sz_arg = 3;
   if (sz_res) *sz_res = 1;
   if (sz_iw) *sz_iw = 0;
   if (sz_w) *sz_w = 0;
@@ -546,7 +526,7 @@ CASADI_SYMBOL_EXPORT int BlueROV_Heavy_expl_ode_fun_work(casadi_int *sz_arg, cas
 }
 
 CASADI_SYMBOL_EXPORT int BlueROV_Heavy_expl_ode_fun_work_bytes(casadi_int *sz_arg, casadi_int* sz_res, casadi_int *sz_iw, casadi_int *sz_w) {
-  if (sz_arg) *sz_arg = 4*sizeof(const casadi_real*);
+  if (sz_arg) *sz_arg = 3*sizeof(const casadi_real*);
   if (sz_res) *sz_res = 1*sizeof(casadi_real*);
   if (sz_iw) *sz_iw = 0*sizeof(casadi_int);
   if (sz_w) *sz_w = 0*sizeof(casadi_real);

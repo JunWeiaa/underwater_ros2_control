@@ -33,7 +33,6 @@ extern "C" {
 #define casadi_s0 CASADI_PREFIX(s0)
 #define casadi_s1 CASADI_PREFIX(s1)
 #define casadi_s2 CASADI_PREFIX(s2)
-#define casadi_s3 CASADI_PREFIX(s3)
 #define casadi_sq CASADI_PREFIX(sq)
 
 /* Symbol visibility in DLLs */
@@ -54,9 +53,8 @@ extern "C" {
 casadi_real casadi_sq(casadi_real x) { return x*x;}
 
 static const casadi_int casadi_s0[3] = {13, 1, 1};
-static const casadi_int casadi_s1[3] = {88, 1, 1};
-static const casadi_int casadi_s2[3] = {1, 1, 1};
-static const casadi_int casadi_s3[41] = 
+static const casadi_int casadi_s1[3] = {1, 1, 1};
+static const casadi_int casadi_s2[41] = 
   {13, 13, 0, 1, 2, 3, 7, 11,
   15, 19, 20, 21, 22, 23, 24, 25,
   0, 1, 2, 3, 4, 5, 6, 3,
@@ -64,7 +62,7 @@ static const casadi_int casadi_s3[41] =
   4, 5, 6, 7, 8, 9, 10, 11,
   12};
 
-/* BlueROV_Heavy_cost_ext_cost_e_fun_jac_hess:(i0[13],i1[13],i2[88])->(o0,o1[13],o2[13x13,25nz]) */
+/* BlueROV_Heavy_cost_ext_cost_e_fun_jac_hess:(i0[13],i1[13])->(o0,o1[13],o2[13x13,25nz]) */
 static int casadi_f0(const casadi_real** arg, casadi_real** res, casadi_int* iw, casadi_real* w, int mem) {
   casadi_real a00, a01, a02, a03, a04, a05, a06, a07, a08, a09, a10, a11;
   casadi_real a12, a13, a14, a15, a16, a17, a18, a19, a20, a21, a22, a23;
@@ -813,7 +811,7 @@ CASADI_SYMBOL_EXPORT void BlueROV_Heavy_cost_ext_cost_e_fun_jac_hess_incref(void
 CASADI_SYMBOL_EXPORT void BlueROV_Heavy_cost_ext_cost_e_fun_jac_hess_decref(void) {
 }
 
-CASADI_SYMBOL_EXPORT casadi_int BlueROV_Heavy_cost_ext_cost_e_fun_jac_hess_n_in(void) { return 3;}
+CASADI_SYMBOL_EXPORT casadi_int BlueROV_Heavy_cost_ext_cost_e_fun_jac_hess_n_in(void) { return 2;}
 
 CASADI_SYMBOL_EXPORT casadi_int BlueROV_Heavy_cost_ext_cost_e_fun_jac_hess_n_out(void) { return 3;}
 
@@ -827,7 +825,6 @@ CASADI_SYMBOL_EXPORT const char* BlueROV_Heavy_cost_ext_cost_e_fun_jac_hess_name
   switch (i) {
     case 0: return "i0";
     case 1: return "i1";
-    case 2: return "i2";
     default: return 0;
   }
 }
@@ -845,22 +842,21 @@ CASADI_SYMBOL_EXPORT const casadi_int* BlueROV_Heavy_cost_ext_cost_e_fun_jac_hes
   switch (i) {
     case 0: return casadi_s0;
     case 1: return casadi_s0;
-    case 2: return casadi_s1;
     default: return 0;
   }
 }
 
 CASADI_SYMBOL_EXPORT const casadi_int* BlueROV_Heavy_cost_ext_cost_e_fun_jac_hess_sparsity_out(casadi_int i) {
   switch (i) {
-    case 0: return casadi_s2;
+    case 0: return casadi_s1;
     case 1: return casadi_s0;
-    case 2: return casadi_s3;
+    case 2: return casadi_s2;
     default: return 0;
   }
 }
 
 CASADI_SYMBOL_EXPORT int BlueROV_Heavy_cost_ext_cost_e_fun_jac_hess_work(casadi_int *sz_arg, casadi_int* sz_res, casadi_int *sz_iw, casadi_int *sz_w) {
-  if (sz_arg) *sz_arg = 3;
+  if (sz_arg) *sz_arg = 2;
   if (sz_res) *sz_res = 3;
   if (sz_iw) *sz_iw = 0;
   if (sz_w) *sz_w = 0;
@@ -868,7 +864,7 @@ CASADI_SYMBOL_EXPORT int BlueROV_Heavy_cost_ext_cost_e_fun_jac_hess_work(casadi_
 }
 
 CASADI_SYMBOL_EXPORT int BlueROV_Heavy_cost_ext_cost_e_fun_jac_hess_work_bytes(casadi_int *sz_arg, casadi_int* sz_res, casadi_int *sz_iw, casadi_int *sz_w) {
-  if (sz_arg) *sz_arg = 3*sizeof(const casadi_real*);
+  if (sz_arg) *sz_arg = 2*sizeof(const casadi_real*);
   if (sz_res) *sz_res = 3*sizeof(casadi_real*);
   if (sz_iw) *sz_iw = 0*sizeof(casadi_int);
   if (sz_w) *sz_w = 0*sizeof(casadi_real);

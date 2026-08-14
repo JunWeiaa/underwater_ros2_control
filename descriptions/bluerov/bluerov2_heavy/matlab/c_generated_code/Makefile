@@ -110,7 +110,7 @@ sim_cython_c: sim_shared_lib
 	-o acados_sim_solver_pyx.c \
 	-I $(INCLUDE_PATH)/../interfaces/acados_template/acados_template \
 	$(INCLUDE_PATH)/../interfaces/acados_template/acados_template/acados_sim_solver_pyx.pyx \
-	-I /home/wjun/bluerov2_ws222/src/underwater_ros2_control/controllers/acados_nmpc_controller/matlab/c_generated_code \
+	-I /home/wjun/Documents/underwater_ws/src/underwater_ros2_control/descriptions/bluerov/bluerov2_heavy/matlab/c_generated_code \
 
 sim_cython_o: sim_cython_c
 	$(CC) $(ACADOS_FLAGS) -c -O2 \

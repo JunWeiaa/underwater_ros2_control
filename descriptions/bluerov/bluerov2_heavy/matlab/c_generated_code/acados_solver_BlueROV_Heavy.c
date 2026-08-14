@@ -44,8 +44,6 @@
 #include "BlueROV_Heavy_model/BlueROV_Heavy_model.h"
 
 
-#include "BlueROV_Heavy_p_global_precompute_fun.h"
-#include "BlueROV_Heavy_constraints/BlueROV_Heavy_constraints.h"
 #include "BlueROV_Heavy_cost/BlueROV_Heavy_cost.h"
 
 
@@ -282,8 +280,8 @@ static ocp_nlp_dims* BlueROV_Heavy_acados_create_setup_dimensions(BlueROV_Heavy_
     ocp_nlp_dims_set_opt_vars(nlp_config, nlp_dims, "ns", ns);
     ocp_nlp_dims_set_opt_vars(nlp_config, nlp_dims, "np", np);
 
-    ocp_nlp_dims_set_global(nlp_config, nlp_dims, "np_global", 8);
-    ocp_nlp_dims_set_global(nlp_config, nlp_dims, "n_global_data", 88);
+    ocp_nlp_dims_set_global(nlp_config, nlp_dims, "np_global", 0);
+    ocp_nlp_dims_set_global(nlp_config, nlp_dims, "n_global_data", 0);
 
     for (int i = 0; i <= N; i++)
     {
@@ -337,49 +335,7 @@ void BlueROV_Heavy_acados_create_setup_functions(BlueROV_Heavy_solver_capsule* c
     external_function_opts_set_to_default(&ext_fun_opts);
 
 
-    // NOTE: p_global_precompute_fun cannot use external_workspace!!!
-    ext_fun_opts.external_workspace = false;
-    capsule->p_global_precompute_fun.casadi_fun = &BlueROV_Heavy_p_global_precompute_fun;
-    capsule->p_global_precompute_fun.casadi_work = &BlueROV_Heavy_p_global_precompute_fun_work;
-    capsule->p_global_precompute_fun.casadi_sparsity_in = &BlueROV_Heavy_p_global_precompute_fun_sparsity_in;
-    capsule->p_global_precompute_fun.casadi_sparsity_out = &BlueROV_Heavy_p_global_precompute_fun_sparsity_out;
-    capsule->p_global_precompute_fun.casadi_n_in = &BlueROV_Heavy_p_global_precompute_fun_n_in;
-    capsule->p_global_precompute_fun.casadi_n_out = &BlueROV_Heavy_p_global_precompute_fun_n_out;
-    external_function_casadi_create(&capsule->p_global_precompute_fun, &ext_fun_opts);
-    // asserts
-    if (capsule->p_global_precompute_fun.in_num != 1)
-    {
-        printf("input dimension of p_global_precompute_fun should have 1 input, got %d\n", capsule->p_global_precompute_fun.in_num);
-        exit(1);
-    }
-    if (capsule->p_global_precompute_fun.out_num != 1)
-    {
-        printf("input dimension of p_global_precompute_fun should have 1 output, got %d\n", capsule->p_global_precompute_fun.out_num);
-        exit(1);
-    }
-    if (capsule->p_global_precompute_fun.args_size[0] != 8)
-    {
-        printf("input dimension of p_global_precompute_fun should be np_global = 8, got %d\n", capsule->p_global_precompute_fun.args_size[0]);
-        exit(1);
-    }
-    if (capsule->p_global_precompute_fun.res_size[0] != 88)
-    {
-        printf("output dimension of p_global_precompute_fun should be n_global_data = 88, got %d\n", capsule->p_global_precompute_fun.res_size[0]);
-        exit(1);
-    }
-
-    ext_fun_opts.with_global_data = true;
     ext_fun_opts.external_workspace = true;
-    // constraints.constr_type == "BGH" and dims.nh > 0
-    capsule->nl_constr_h_fun_jac = (external_function_external_param_casadi *) malloc(sizeof(external_function_external_param_casadi)*(N-1));
-    for (int i = 0; i < N-1; i++) {
-        MAP_CASADI_FNC(nl_constr_h_fun_jac[i], BlueROV_Heavy_constr_h_fun_jac_uxt_zt);
-    }
-    capsule->nl_constr_h_fun = (external_function_external_param_casadi *) malloc(sizeof(external_function_external_param_casadi)*(N-1));
-    for (int i = 0; i < N-1; i++) {
-        MAP_CASADI_FNC(nl_constr_h_fun[i], BlueROV_Heavy_constr_h_fun);
-    }
-
     // external cost
     MAP_CASADI_FNC(ext_cost_0_fun, BlueROV_Heavy_cost_ext_cost_0_fun);
     MAP_CASADI_FNC(ext_cost_0_fun_jac, BlueROV_Heavy_cost_ext_cost_0_fun_jac);
@@ -461,12 +417,7 @@ void BlueROV_Heavy_acados_create_set_default_parameters(BlueROV_Heavy_solver_cap
     free(p);
 
 
-    // initialize global parameters to nominal value
-    double* p_global = calloc(NP_GLOBAL, sizeof(double));
-
-    BlueROV_Heavy_acados_set_p_global_and_precompute_dependencies(capsule, p_global, NP_GLOBAL);
-
-    free(p_global);
+    // no global parameters defined
 }
 
 
@@ -699,30 +650,6 @@ void BlueROV_Heavy_acados_setup_nlp_in(BlueROV_Heavy_solver_capsule* capsule, co
 
 
 
-    // set up nonlinear constraints for stage 1 to N-1
-    double* luh = calloc(2*NH, sizeof(double));
-    double* lh = luh;
-    double* uh = luh + NH;
-    uh[0] = 10000000;
-    uh[1] = 10000000;
-    uh[2] = 10000000;
-    uh[3] = 10000000;
-    uh[4] = 10000000;
-    uh[5] = 10000000;
-
-    for (int i = 1; i < N; i++)
-    {
-        ocp_nlp_constraints_model_set_external_param_fun(nlp_config, nlp_dims, nlp_in, i, "nl_constr_h_fun_jac",
-                                      &capsule->nl_constr_h_fun_jac[i-1]);
-        ocp_nlp_constraints_model_set_external_param_fun(nlp_config, nlp_dims, nlp_in, i, "nl_constr_h_fun",
-                                      &capsule->nl_constr_h_fun[i-1]);
-        
-        
-        
-        ocp_nlp_constraints_model_set(nlp_config, nlp_dims, nlp_in, i, "lh", lh);
-        ocp_nlp_constraints_model_set(nlp_config, nlp_dims, nlp_in, i, "uh", uh);
-    }
-    free(luh);
 
 
 
@@ -1068,20 +995,7 @@ int BlueROV_Heavy_acados_update_params_sparse(BlueROV_Heavy_solver_capsule * cap
 int BlueROV_Heavy_acados_set_p_global_and_precompute_dependencies(BlueROV_Heavy_solver_capsule* capsule, double* data, int data_len)
 {
 
-    external_function_casadi* fun = &capsule->p_global_precompute_fun;
-    fun->args[0] = data;
-    int np_global = 8;
-
-    if (data_len != np_global)
-    {
-        printf("BlueROV_Heavy_acados_set_p_global_and_precompute_dependencies: np_global = %d should match data_len = %d. Exiting.\n", np_global, data_len);
-        exit(1);
-    }
-
-    ocp_nlp_in *in = BlueROV_Heavy_acados_get_nlp_in(capsule);
-    fun->res[0] = in->global_data;
-
-    fun->casadi_fun((const double **) fun->args, fun->res, fun->int_work, fun->float_work, NULL);
+    // printf("No global_data, BlueROV_Heavy_acados_set_p_global_and_precompute_dependencies does nothing.\n");
     return 0;
 }
 
@@ -1160,16 +1074,8 @@ int BlueROV_Heavy_acados_free(BlueROV_Heavy_solver_capsule* capsule)
     
 
     // constraints
-    for (int i = 0; i < N-1; i++)
-    {
-        external_function_external_param_casadi_free(&capsule->nl_constr_h_fun_jac[i]);
-        external_function_external_param_casadi_free(&capsule->nl_constr_h_fun[i]);
-    }
-    free(capsule->nl_constr_h_fun_jac);
-    free(capsule->nl_constr_h_fun);
 
 
-    external_function_casadi_free(&capsule->p_global_precompute_fun);
 
     return 0;
 }

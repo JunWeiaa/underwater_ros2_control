@@ -1,4 +1,4 @@
 solver_id: bluerov2_heavy
 model_name: BlueROV_Heavy
 macro_prefix: BLUEROV_HEAVY
-has_p_global: true
+has_p_global: false

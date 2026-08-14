@@ -52,9 +52,9 @@ endif()
 
 
 if(CMAKE_CXX_COMPILER_ID MATCHES "MSVC")
-    set(CMAKE_RUNTIME_OUTPUT_DIRECTORY_RELEASE /home/wjun/bluerov2_ws222/src/underwater_ros2_control/controllers/acados_nmpc_controller/matlab/c_generated_code)
-    set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY_RELEASE /home/wjun/bluerov2_ws222/src/underwater_ros2_control/controllers/acados_nmpc_controller/matlab/c_generated_code)
-    set(CMAKE_LIBRARY_OUTPUT_DIRECTORY_RELEASE /home/wjun/bluerov2_ws222/src/underwater_ros2_control/controllers/acados_nmpc_controller/matlab/c_generated_code)
+    set(CMAKE_RUNTIME_OUTPUT_DIRECTORY_RELEASE /home/wjun/Documents/underwater_ws/src/underwater_ros2_control/descriptions/bluerov/bluerov2_heavy/matlab/c_generated_code)
+    set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY_RELEASE /home/wjun/Documents/underwater_ws/src/underwater_ros2_control/descriptions/bluerov/bluerov2_heavy/matlab/c_generated_code)
+    set(CMAKE_LIBRARY_OUTPUT_DIRECTORY_RELEASE /home/wjun/Documents/underwater_ws/src/underwater_ros2_control/descriptions/bluerov/bluerov2_heavy/matlab/c_generated_code)
 endif()
 
 

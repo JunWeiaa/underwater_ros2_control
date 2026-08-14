@@ -166,7 +166,7 @@ moment_restoring = moment_gravity + moment_buoyancy;
 g = [force_restoring; moment_restoring];
 
 %% 动力学方程
-forces = T*(u.*thrust_health) - (CRB + CA)*[v;w] - g - D*[v;w];
+forces = T*u - (CRB + CA)*[v;w] - g - D*[v;w];
 accel_b = (MRB + MA) \ forces;
 a_b =  accel_b(1:3);
 omega_dot = accel_b(4:6);

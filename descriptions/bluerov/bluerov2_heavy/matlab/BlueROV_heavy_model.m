@@ -3,7 +3,7 @@ import casadi.*
 nx = 13;
 nu = 8;
 ref_path = SX.sym('ref_path',nx);
-thrust_health = SX.sym('thrust_health',nu);  % 推进器健康状态（8维）
+% thrust_health = SX.sym('thrust_health',nu);  % 推进器健康状态（8维）
 %% 定义状态变量（13维：位置+四元数+速度）
 p = SX.sym('p',3);
 q = SX.sym('q',4);
@@ -165,7 +165,7 @@ moment_restoring = moment_gravity + moment_buoyancy;
 g = [force_restoring; moment_restoring];
 
 %% 动力学方程
-forces = T*(u.*thrust_health) - (CRB + CA)*[v;w] - g - D*[v;w];
+forces = T*u - (CRB + CA)*[v;w] - g - D*[v;w];
 accel_b = (MRB + MA) \ forces;
 a_b =  accel_b(1:3);
 omega_dot = accel_b(4:6);
@@ -233,132 +233,14 @@ cost_expr_ext_cost_custom_hess = blkdiag(R,Q_pos,0,Q_att,Q_vel,Q_ang);
 cost_expr_ext_cost_custom_hess_e = blkdiag(Q_fpos,0,Q_fatt,Q_fvel,Q_fang);
 
 
-con_h_expr_e = [norm(x(1:3)-ref_path(1:3),inf);
-    norm(att_error(1:2),inf);
-    ];
-
-%% HCBF 约束 (圆柱桶安全区域)
-R_cylinder = 4.0; % 圆柱半径 (m)
-H_cylinder = 1.6; % 圆柱高度 (m)
-d_safe = 0.7;     % 增大安全距离到0.3m，提供更多缓冲
-d_depth = 0;
-
-p1_obs = [sqrt(3)/2*2.1,-1.05,0.5];
-p2_obs = [0,2.1,0.5];
-p3_obs = [-sqrt(3)/2*2.1,-1.05,0.5];
-
-r_safe = 0.6;
-% HCBF 增益参数 (确保多项式 s^2 + K1*s + K0 是Hurwitz的)
-% 对于水下机器人，需要考虑其相对较慢的动态响应
-% 较小的增益确保约束不会过于激进，避免数值问题
-
-% 径向约束：相对保守，允许较缓慢的趋近边界
-K_radial = [20, 30];  % [K0, K1] - 较温和的响应
-
-% 深度约束：稍微激进一些，因为深度控制通常更关键
-K_lower = [15, 20];    % [K0, K1] - 下边界稍微严格
-K_upper = [15, 20];    % [K0, K1] - 上边界稍微严格
-K_obs= [15,20];
-% 安全函数定义
-% h1: 径向约束 h1 = R^2 - (x^2 + y^2) >= 0
-h1 = (R_cylinder - d_safe)^2 - (p(1)^2 + p(2)^2);
-
-% h2: 深度下限约束 h2 = z - z_min >= 0 (确保 z >= d_safe)
-h2 = p(3) - d_depth;
-
-% h3: 深度上限约束 h3 = z_max - z >= 0 (确保 z <= H_cylinder - d_safe)
-h3 = (H_cylinder - d_depth) - p(3);
-
-h4 = (p(1)-p1_obs(1))^2+(p(2)-p1_obs(2))^2 -r_safe^2;
-h5 = (p(1)-p2_obs(1))^2+(p(2)-p2_obs(2))^2 -r_safe^2;
-h6 = (p(1)-p3_obs(1))^2+(p(2)-p3_obs(2))^2 -r_safe^2;
 
 
-% 计算一阶Lie导数 L_f h_j
-% L_f h1 = ∇h1^T * ṗ = ∇h1^T * R * v
-grad_h1 = [-2*p(1); -2*p(2); 0];  % ∇h1
-grad_h2 = [0; 0; 1];               % ∇h2
-grad_h3 = [0; 0; -1];              % ∇h3
-grad_h4 = [2*(p(1)-p1_obs(1));2*(p(2)-p1_obs(2));0];
-grad_h5 = [2*(p(1)-p2_obs(1));2*(p(2)-p2_obs(2));0];
-grad_h6 = [2*(p(1)-p3_obs(1));2*(p(2)-p3_obs(2));0];
-L_f_h1 = grad_h1' * R_b2n * v;
-L_f_h2 = grad_h2' * R_b2n * v;
-L_f_h3 = grad_h3' * R_b2n * v;
-L_f_h4 = grad_h4' * R_b2n * v;
-L_f_h5 = grad_h5' * R_b2n * v;
-L_f_h6 = grad_h6' * R_b2n * v;
-
-% 计算二阶Lie导数 L_f^2 h_j
-% L_f^2 h_j = ∇h_j^T * (S(ω)R*v + R*M^(-1)*τ_drift)
-% 其中 S(ω) 是反对称矩阵, τ_drift = -C*ν - D*ν - g
-tau_drift = -(CRB + CA)*[v;w] - g - D*[v;w];
-
-% 反对称矩阵 S(ω)
-S_omega = [0, -w(3), w(2);
-    w(3), 0, -w(1);
-    -w(2), w(1), 0];
-
-% 计算 L_f^2 h_j (只需要力的部分，前3个元素)
-M_inv = (MRB + MA) \ tau_drift;
-rdot_term = S_omega * R_b2n * v + R_b2n * M_inv(1:3);
-L_f2_h1 = grad_h1' * rdot_term;
-L_f2_h2 = grad_h2' * rdot_term;
-L_f2_h3 = grad_h3' * rdot_term;
-L_f2_h4 = grad_h4' * rdot_term;
-L_f2_h5 = grad_h5' * rdot_term;
-L_f2_h6 = grad_h6' * rdot_term;
-% 计算混合Lie导数 L_g L_f h_j
-% L_g L_f h_j = ∇h_j^T * R * M^(-1) * T
-% M_inv_T = (MRB + MA) \ T; % 故意移除 diag(thrust_health) 以模拟观测器失效
-M_inv_T = (MRB + MA) \ T*diag(thrust_health); % 
-L_g_Lf_h1 = grad_h1' * R_b2n * M_inv_T(1:3, :);
-L_g_Lf_h2 = grad_h2' * R_b2n * M_inv_T(1:3, :);
-L_g_Lf_h3 = grad_h3' * R_b2n * M_inv_T(1:3, :);
-L_g_Lf_h4 = grad_h4' * R_b2n * M_inv_T(1:3, :);
-L_g_Lf_h5 = grad_h5' * R_b2n * M_inv_T(1:3, :);
-L_g_Lf_h6 = grad_h6' * R_b2n * M_inv_T(1:3, :);
-% HCBF 约束: L_f^2 h + L_g L_f h * u + k^T * ψ >= 0
-% 其中 ψ = [h, L_f h]^T, k = [K0, K1]^T
-% 重新排列为: L_g L_f h * u >= -L_f^2 h - K1*L_f h - K0*h
-
-% 约束右侧项
-b1 = -L_f2_h1 - K_radial(2)*L_f_h1 - K_radial(1)*h1;
-b2 = -L_f2_h2 - K_lower(2)*L_f_h2 - K_lower(1)*h2;
-b3 = -L_f2_h3 - K_upper(2)*L_f_h3 - K_upper(1)*h3;
-b4 = -L_f2_h4 - K_obs(2)*L_f_h4 - K_obs(1)*h4;
-b5 = -L_f2_h5 - K_obs(2)*L_f_h5 - K_obs(1)*h5;
-b6 = -L_f2_h6 - K_obs(2)*L_f_h6 - K_obs(1)*h6;
-% HCBF 约束矩阵形式: A_j * u >= b_j
-% 在 Acados 中，约束形式为 C*u - d >= 0，即 u 的线性约束
-% 所以我们定义为: L_g_Lf_h * u - b >= 0
-
-% 径向HCBF约束
-con_h_radial = L_g_Lf_h1 * u - b1;
-
-% 深度下限HCBF约束
-con_h_lower = L_g_Lf_h2 * u - b2;
-
-% 深度上限HCBF约束
-con_h_upper = L_g_Lf_h3 * u - b3;
-
-% 障碍物约束
-con_h_obs1 = L_g_Lf_h4 * u - b4;
-con_h_obs2 = L_g_Lf_h5 * u - b5;
-con_h_obs3 = L_g_Lf_h6 * u - b6;
-
-% 合并所有HCBF约束
-con_h_expr = vertcat(con_h_radial, con_h_lower, con_h_upper,con_h_obs1,con_h_obs2,con_h_obs3);
-
-% 暂时注释掉完整的HCBF约束
-% con_h_expr = vertcat(con_h_radial, con_h_lower, con_h_upper);
 %% 构建模型
 model = AcadosModel();
 model.x = x;
 model.u = u;
 model.xdot=xdot;
 model.p = ref_path;
-model.p_global = thrust_health;  % 推进器健康状态作为全局参数
 model.f_expl_expr = f_expl_expr;
 model.f_impl_expr = f_impl_expr;
 model.cost_expr_ext_cost_0 = cost_expr_ext_cost_0;
@@ -367,6 +249,5 @@ model.cost_expr_ext_cost_e = cost_expr_ext_cost_e;
 model.name = 'BlueROV_Heavy';
 % model.cost_expr_ext_cost_custom_hess= cost_expr_ext_cost_custom_hess;
 % model.cost_expr_ext_cost_custom_hess_e= cost_expr_ext_cost_custom_hess_e;
-model.con_h_expr = con_h_expr;
-% model.con_h_expr_e = con_h_expr_e;
+
 end

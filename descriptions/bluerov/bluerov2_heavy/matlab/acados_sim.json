@@ -4,7 +4,7 @@
 	"shared_lib_ext":".so",
 	"json_file":"acados_sim.json",
 	"cython_include_dirs":[],
-	"code_export_directory":"c_generated_code",
+	"code_export_directory":"/home/wjun/Documents/underwater_ws/src/underwater_ros2_control/descriptions/bluerov/bluerov2_heavy/matlab/c_generated_code",
 	"dims":{
 		"nx":13,
 		"nu":8,
