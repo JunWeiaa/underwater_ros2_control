@@ -1,0 +1,146 @@
+#include "acados_solver_@MODEL_NAME@.h"
+
+#include <stddef.h>
+
+void *generated_solver_create_capsule(void) {
+  return @MODEL_NAME@_acados_create_capsule();
+}
+
+int generated_solver_free_capsule(void *capsule) {
+  return @MODEL_NAME@_acados_free_capsule((@MODEL_NAME@_solver_capsule *)capsule);
+}
+
+int generated_solver_create_with_discretization(void *capsule, int n_time_steps,
+                                                double *new_time_steps) {
+  return @MODEL_NAME@_acados_create_with_discretization(
+      (@MODEL_NAME@_solver_capsule *)capsule, n_time_steps, new_time_steps);
+}
+
+int generated_solver_reset(void *capsule, int reset_qp_solver_mem) {
+  return @MODEL_NAME@_acados_reset((@MODEL_NAME@_solver_capsule *)capsule,
+                                   reset_qp_solver_mem);
+}
+
+int generated_solver_free(void *capsule) {
+  return @MODEL_NAME@_acados_free((@MODEL_NAME@_solver_capsule *)capsule);
+}
+
+int generated_solver_solve(void *capsule) {
+  return @MODEL_NAME@_acados_solve((@MODEL_NAME@_solver_capsule *)capsule);
+}
+
+int generated_solver_update_params(void *capsule, int stage, double *value,
+                                   int np) {
+  return @MODEL_NAME@_acados_update_params((@MODEL_NAME@_solver_capsule *)capsule,
+                                           stage, value, np);
+}
+
+int generated_solver_set_p_global_and_precompute_dependencies(void *capsule,
+                                                              double *data,
+                                                              int data_len) {
+#if @HAS_P_GLOBAL@
+  return @MODEL_NAME@_acados_set_p_global_and_precompute_dependencies(
+      (@MODEL_NAME@_solver_capsule *)capsule, data, data_len);
+#else
+  (void)capsule;
+  (void)data;
+  (void)data_len;
+  return 0;
+#endif
+}
+
+ocp_nlp_config *generated_solver_get_nlp_config(void *capsule) {
+  return @MODEL_NAME@_acados_get_nlp_config((@MODEL_NAME@_solver_capsule *)capsule);
+}
+
+ocp_nlp_dims *generated_solver_get_nlp_dims(void *capsule) {
+  return @MODEL_NAME@_acados_get_nlp_dims((@MODEL_NAME@_solver_capsule *)capsule);
+}
+
+ocp_nlp_in *generated_solver_get_nlp_in(void *capsule) {
+  return @MODEL_NAME@_acados_get_nlp_in((@MODEL_NAME@_solver_capsule *)capsule);
+}
+
+ocp_nlp_out *generated_solver_get_nlp_out(void *capsule) {
+  return @MODEL_NAME@_acados_get_nlp_out((@MODEL_NAME@_solver_capsule *)capsule);
+}
+
+ocp_nlp_solver *generated_solver_get_nlp_solver(void *capsule) {
+  return @MODEL_NAME@_acados_get_nlp_solver((@MODEL_NAME@_solver_capsule *)capsule);
+}
+
+void *generated_solver_get_nlp_opts(void *capsule) {
+  return @MODEL_NAME@_acados_get_nlp_opts((@MODEL_NAME@_solver_capsule *)capsule);
+}
+
+int generated_solver_get_control(void *capsule, double *control) {
+  ocp_nlp_config *config =
+      @MODEL_NAME@_acados_get_nlp_config((@MODEL_NAME@_solver_capsule *)capsule);
+  ocp_nlp_dims *dims =
+      @MODEL_NAME@_acados_get_nlp_dims((@MODEL_NAME@_solver_capsule *)capsule);
+  ocp_nlp_out *out =
+      @MODEL_NAME@_acados_get_nlp_out((@MODEL_NAME@_solver_capsule *)capsule);
+  ocp_nlp_out_get(config, dims, out, 0, "u", control);
+  return 0;
+}
+
+void generated_solver_get_dims(int *n, int *nx, int *nu, int *np,
+                               int *np_global, int *nbx0, int *nbu,
+                               int *nh) {
+  if (n) {
+    *n = @MACRO_PREFIX@_N;
+  }
+  if (nx) {
+    *nx = @MACRO_PREFIX@_NX;
+  }
+  if (nu) {
+    *nu = @MACRO_PREFIX@_NU;
+  }
+  if (np) {
+    *np = @MACRO_PREFIX@_NP;
+  }
+  if (np_global) {
+    *np_global = @MACRO_PREFIX@_NP_GLOBAL;
+  }
+  if (nbx0) {
+    *nbx0 = @MACRO_PREFIX@_NBX0;
+  }
+  if (nbu) {
+    *nbu = @MACRO_PREFIX@_NBU;
+  }
+  if (nh) {
+    *nh = @MACRO_PREFIX@_NH;
+  }
+}
+
+int generated_solver_n(void) {
+  return @MACRO_PREFIX@_N;
+}
+
+int generated_solver_nx(void) {
+  return @MACRO_PREFIX@_NX;
+}
+
+int generated_solver_nu(void) {
+  return @MACRO_PREFIX@_NU;
+}
+
+int generated_solver_np(void) {
+  return @MACRO_PREFIX@_NP;
+}
+
+int generated_solver_np_global(void) {
+  return @MACRO_PREFIX@_NP_GLOBAL;
+}
+
+int generated_solver_nbx0(void) {
+  return @MACRO_PREFIX@_NBX0;
+}
+
+int generated_solver_nbu(void) {
+  return @MACRO_PREFIX@_NBU;
+}
+
+int generated_solver_nh(void) {
+  return @MACRO_PREFIX@_NH;
+}

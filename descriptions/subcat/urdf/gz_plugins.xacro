@@ -1,0 +1,101 @@
+<?xml version="1.0"?>
+<robot xmlns:xacro="http://ros.org/wiki/xacro">
+  <!-- ros2_control系统 -->
+  <ros2_control name="GazeboSimSystem" type="system">
+    <hardware>
+      <plugin>gz_underwater_hardware/GazeboSimSystem</plugin>
+    </hardware>
+    <!-- 4个推进器joint接口，建议用xacro宏 -->
+    <xacro:macro name="thruster_control_interface" params="num">
+      <joint name="thruster${num}_joint">
+        <command_interface name="thrust"/>
+        <state_interface name="position"/>
+        <state_interface name="velocity"/>
+        <state_interface name="effort"/>
+      </joint>
+    </xacro:macro>
+    <xacro:thruster_control_interface num="1"/>
+    <xacro:thruster_control_interface num="2"/>
+    <xacro:thruster_control_interface num="3"/>
+    <xacro:thruster_control_interface num="4"/>
+
+    <xacro:macro name="servo_control_interface" params="num">
+      <joint name="servo${num}_joint">
+        <command_interface name="position"/>
+        <state_interface name="position"/>
+        <state_interface name="velocity"/>
+        <state_interface name="effort"/>
+      </joint>
+    </xacro:macro>
+    <xacro:servo_control_interface num="1"/>
+    <xacro:servo_control_interface num="2"/>
+    <xacro:servo_control_interface num="3"/>
+    <xacro:servo_control_interface num="4"/>
+
+    <sensor name="imu_sensor">
+      <state_interface name="orientation.x"/>
+      <state_interface name="orientation.y"/>
+      <state_interface name="orientation.z"/>
+      <state_interface name="orientation.w"/>
+      <state_interface name="angular_velocity.x"/>
+      <state_interface name="angular_velocity.y"/>
+      <state_interface name="angular_velocity.z"/>
+      <state_interface name="linear_acceleration.x"/>
+      <state_interface name="linear_acceleration.y"/>
+      <state_interface name="linear_acceleration.z"/>
+    </sensor>
+  </ros2_control>
+  <!-- Hydrodynamics plugin -->
+  <gazebo>
+    <plugin filename="gz-sim-hydrodynamics-system" name="gz::sim::systems::Hydrodynamics">
+      <link_name>base_link</link_name>
+      <water_density>1000.0</water_density>
+      <!-- <xDotU>-2.8</xDotU>
+      <yDotV>-6.5</yDotV>
+      <zDotW>-7.2</zDotW>
+      <kDotP>-0.08</kDotP>
+      <mDotQ>-0.08</mDotQ>
+      <nDotR>-0.08</nDotR> -->
+      <xU>-0.387413</xU>
+      <yV>-1.314762</yV>
+      <zW>0</zW>
+      <kP>-0.138612</kP>
+      <mQ>0</mQ>
+      <nR>-0.07</nR>
+      <xUabsU>-30.378703</xUabsU>
+      <yVabsV>-33.524885</yVabsV>
+      <zWabsW>-117.4115</zWabsW>
+      <kPabsP> -0.503968</kPabsP>
+      <mQabsQ>-0.601956</mQabsQ>
+      <nRabsR>-0.2</nRabsR>
+    </plugin>
+    <plugin filename="gz-sim-odometry-publisher-system" name="gz::sim::systems::OdometryPublisher">
+      <odom_frame>odom</odom_frame>
+      <robot_base_frame>base_link</robot_base_frame>
+      <dimensions>3</dimensions>
+      <odom_publish_frequency>1000</odom_publish_frequency>
+    </plugin>
+    <plugin name="gz_underwater_hardware::GazeboSimUnderwaterPlugin" filename="gz_underwater_hardware-system">
+      <parameters>$(find subcat)/config/gazebo.yaml</parameters>
+      <thruster_coefficient>1.5625 1.5625 -1.5625 -1.5625</thruster_coefficient>
+      <propeller_diameter>0.02 0.02 0.02 0.02</propeller_diameter>
+      <thruster_num>4</thruster_num>
+    </plugin>
+    <plugin filename="gz-sim-imu-system"
+            name="gz::sim::systems::Imu">
+    </plugin>
+  </gazebo>
+  <gazebo reference="imu_link">
+    <sensor name="imu_sensor" type="imu">
+      <always_on>1</always_on>
+      <update_rate>1000.0</update_rate>
+      <visualize>true</visualize>
+      <topic>imu</topic>
+    </sensor>
+  </gazebo>
+  <gazebo reference="imu_joint">
+    <disableFixedJointLumping>true</disableFixedJointLumping>
+  </gazebo>  
+
+
+</robot>

@@ -1,0 +1,115 @@
+# Controller Manager configuration
+controller_manager:
+  ros__parameters:
+    update_rate: 1000  # ros2_control read/update/write loop Hz
+
+    # Define the available controllers
+    joint_state_broadcaster:
+      type: joint_state_broadcaster/JointStateBroadcaster
+
+    imu_sensor_broadcaster:
+      type: imu_sensor_broadcaster/IMUSensorBroadcaster
+
+    acados_nmpc_controller:
+      type: acados_nmpc_controller/Acados_NMPC_Controller
+
+
+imu_sensor_broadcaster:
+  ros__parameters:
+    sensor_name: "imu_sensor"
+    frame_id: "imu_link"
+
+acados_nmpc_controller:
+  ros__parameters:
+    update_rate: 500  # controller update/write Hz
+    mpc:
+      frequency: 200.0  # acados solve Hz
+    manual:
+      enforce_path_constraints: false
+    debug:
+      publish_observation: false
+      observation_publish_rate: 20.0
+    robot_pkg: "subcat"
+    solver_id: "subcat"
+    state_dim: 17
+    input_dim: 8
+    solver:
+      input_lower: [-20.0, -20.0, -20.0, -20.0, -0.175, -0.175, -0.175, -0.175]
+      input_upper: [20.0, 20.0, 20.0, 20.0, 0.175, 0.175, 0.175, 0.175]
+    control_output_map:
+      joints: [thruster1_joint, thruster2_joint, thruster3_joint, thruster4_joint, servo1_joint, servo2_joint, servo3_joint, servo4_joint]
+      interfaces: [thrust, thrust, thrust, thrust, position, position, position, position]
+      input_indices: [0, 1, 2, 3, 4, 5, 6, 7]
+      modes: [absolute, absolute, absolute, absolute, integrate, integrate, integrate, integrate]
+      state_indices: [-1, -1, -1, -1, 13, 14, 15, 16]
+      scales: [1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0]
+      offsets: [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]
+      min: [-20.0, -20.0, -20.0, -20.0, -1.57, -1.57, -1.57, -1.57]
+      max: [20.0, 20.0, 20.0, 20.0, 1.57, 1.57, 1.57, 1.57]
+      dt: [0.0, 0.0, 0.0, 0.0, 0.005, 0.005, 0.005, 0.005]
+    state_extra_map:
+      joints: [servo1_joint, servo2_joint, servo3_joint, servo4_joint]
+      interfaces: [position, position, position, position]
+      indices: [13, 14, 15, 16]
+      defaults: [0.0, 0.0, 0.0, 0.0]
+    trajectory:
+      source: "file"
+      target_file: ""
+      target_name: "circle"
+      path_frame: "odom"
+      dt: 0.005
+      prediction_dt: 0.05
+      path_publish_dt: 0.05
+      curr_path_publish_rate: 20.0
+      horizon_steps: 20
+      enable_topic_targets: true
+      bspline_topic: "target_bspline"
+      bspline_degree: 3
+      bspline_duration: 0.0
+      bspline_frame: "enu"
+    joints:
+      - thruster1_joint
+      - thruster2_joint
+      - thruster3_joint
+      - thruster4_joint
+      - servo1_joint
+      - servo2_joint
+      - servo3_joint
+      - servo4_joint
+
+    thruster1_joint.command_interfaces: [thrust]
+    thruster2_joint.command_interfaces: [thrust]
+    thruster3_joint.command_interfaces: [thrust]
+    thruster4_joint.command_interfaces: [thrust]
+    servo1_joint.command_interfaces: [position]
+    servo2_joint.command_interfaces: [position]
+    servo3_joint.command_interfaces: [position]
+    servo4_joint.command_interfaces: [position]
+
+    thruster1_joint.state_interfaces: [position, velocity]
+    thruster2_joint.state_interfaces: [position, velocity]
+    thruster3_joint.state_interfaces: [position, velocity]
+    thruster4_joint.state_interfaces: [position, velocity]
+
+    servo1_joint.state_interfaces: [position, velocity]
+    servo2_joint.state_interfaces: [position, velocity]
+    servo3_joint.state_interfaces: [position, velocity]
+    servo4_joint.state_interfaces: [position, velocity]
+
+
+    imu_name: "imu_sensor"
+    base_name: "base"
+
+    imu_interfaces:
+      - orientation.w
+      - orientation.x
+      - orientation.y
+      - orientation.z
+      - angular_velocity.x
+      - angular_velocity.y
+      - angular_velocity.z
+      - linear_acceleration.x
+      - linear_acceleration.y
+      - linear_acceleration.z
+
+ 

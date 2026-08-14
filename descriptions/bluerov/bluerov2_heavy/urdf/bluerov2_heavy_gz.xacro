@@ -1,0 +1,7 @@
+<?xml version="1.0"?>
+<robot xmlns:xacro="http://ros.org/wiki/xacro" name="bluerov2_heavy_gz">
+  <xacro:include filename="$(find bluerov2_heavy)/urdf/base_link.xacro"/>
+  <xacro:include filename="$(find bluerov2_heavy)/urdf/thrusters.xacro"/>
+  <xacro:include filename="$(find bluerov2_heavy)/urdf/transmissions.xacro"/>
+  <xacro:include filename="$(find bluerov2_heavy)/urdf/gz_plugins.xacro"/>
+</robot>

@@ -1,0 +1,48 @@
+# ROS 2 / colcon workspaces
+build/
+install/
+log/
+log_latest/
+.cache/
+
+# Python
+__pycache__/
+*.py[cod]
+.pytest_cache/
+
+# C/C++ and generated build artifacts
+*.o
+*.obj
+*.a
+*.so
+*.so.*
+*.dll
+*.dylib
+*.exe
+*.d
+
+# MATLAB / acados local build products
+**/matlab/build/
+**/c_generated_code/**/*.o
+**/c_generated_code/**/*.a
+**/c_generated_code/**/*.so
+**/c_generated_code/**/*.so.*
+*.mexa64
+*.mexw64
+*.mexmaci64
+
+# ROS bags, logs, and vehicle dumps
+*.bag
+*.db3
+*.mcap
+*.tlog
+*.tlog.raw
+*.bin
+
+# Archives and local editor files
+*.zip
+.vscode/
+.idea/
+*.swp
+*~
+.DS_Store

@@ -1,0 +1,22 @@
+# Target presets for bluerov2_heavy.
+# Coordinates are ENU by default: x east, y north, z up.
+# Select one preset from the controller YAML with trajectory.target_name.
+# TargetManager converts it to NED/FRD before passing it to the controller.
+
+[circle]
+type = circle
+frame = enu
+duration = 40.0
+radius = 1.5
+center = [0.0, 0.0, -0.8]
+start_angle = 0.0
+
+[figure8]
+type = figure8
+frame = enu
+duration = 125.0
+x_amplitude = 6.0
+y_amplitude = 3.0
+z_amplitude = 0.2
+center = [0.0, 0.0, -0.7]
+start_phase = 0.0

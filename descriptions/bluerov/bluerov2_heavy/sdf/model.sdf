@@ -1,0 +1,632 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<sdf version="1.11">
+  <model name="bluerov2_heavy">
+    <pose>0 0 0 0 0 0</pose>
+
+    <!-- BlueROV2 thruster reference: http://www.ardusub.com/introduction/features.html -->
+
+    <link name="base_link">
+      <pose>0 0 0 0 0 0</pose>
+      <inertial>
+        <pose>0.0 0.0 0.011 0 0 0</pose>
+        <mass>13.0</mass>
+        <inertia>
+          <ixx>0.26</ixx>
+          <ixy>0</ixy>
+          <ixz>0</ixz>
+          <iyy>0.23</iyy>
+          <iyz>0</iyz>
+          <izz>0.37</izz>
+        </inertia>
+
+      <!-- <fluid_added_mass>
+        <xx>5.5</xx>
+        <yy>12.7</yy>
+        <zz>14.57</zz>
+        <pp>0.12</pp>
+        <qq>0.12</qq>
+        <rr>0.12</rr>
+      </fluid_added_mass> -->
+      </inertial>
+      <visual name="base_link_visual">
+        <geometry>
+          <mesh>
+            <uri>model://bluerov2_heavy/meshes/bluerov2_heavy.dae</uri>
+            <scale>0.025 0.025 0.025</scale>
+          </mesh>
+        </geometry>
+      </visual>
+
+      <!-- Collision volume * fluid_density == displaced mass, used by BuoyancyPlugin -->
+      <collision name="base_link_collision">
+        <pose>0.0 0.0 0.06 0 0 0</pose>
+        <geometry>
+          <box>
+            <size>0.457 0.575 0.055</size>
+          </box>
+        </geometry>
+      </collision>
+
+      <!-- IMU sensor gyro and accel data will be sent to ArduSub -->
+      <sensor name="imu_sensor" type="imu">
+
+        <pose>0 0 0 0 0 0</pose>
+        <always_on>1</always_on>
+        <update_rate>1000.0</update_rate>
+      </sensor>
+    </link>
+
+
+    <!-- Hydrodynamics plugin -->
+    <plugin
+        filename="gz-sim-hydrodynamics-system"
+        name="gz::sim::systems::Hydrodynamics">
+      <link_name>base_link</link_name>
+      <water_density>1000.0</water_density>
+
+            <!-- Added mass: -->
+      <xDotU>-5.5</xDotU>
+      <yDotV>-12.7</yDotV>
+      <zDotW>-12.7</zDotW>
+      <kDotP>-0.12</kDotP>
+      <mDotQ>-0.12</mDotQ>
+      <nDotR>-0.12</nDotR>
+
+
+      <!-- First order stability derivative: -->
+      <xU>-4.03</xU>
+      <yV>-6.22</yV>
+      <zW>-5.18</zW>
+      <kP>-0.07</kP>
+      <mQ>-0.07</mQ>
+      <nR>-0.07</nR>
+      <!-- Second order stability derivative: -->
+      <xUabsU>-18.18</xUabsU>
+      <yVabsV>-21.66</yVabsV>
+      <zWabsW>-36.99</zWabsW>
+      <kPabsP>-1.55</kPabsP>
+      <mQabsQ>-1.55</mQabsQ>
+      <nRabsR>-1.55</nRabsR>
+    </plugin>
+
+    <link name="thruster1">
+      <pose relative_to="base_link">0.14 -0.092 0.0 -1.571 1.571 -0.785</pose>
+      <visual name="thruster_prop_visual">
+        <pose>0 0 0 -1.571 0 0</pose>
+        <geometry>
+          <mesh>
+            <uri>model://bluerov2_heavy/meshes/t200_ccw_prop.dae</uri>
+          </mesh>
+        </geometry>
+      </visual>
+      <inertial>
+        <mass>0.002</mass>
+        <inertia>
+          <ixx>0.001</ixx>
+          <ixy>0</ixy>
+          <ixz>0</ixz>
+          <iyy>0.001</iyy>
+          <iyz>0</iyz>
+          <izz>0.001</izz>
+        </inertia>
+      </inertial>
+
+    </link>
+
+    <link name="thruster2">
+      <pose relative_to="base_link">0.14 0.092 0.0 -1.571 1.571 -2.356</pose>
+      <visual name="thruster_prop_visual">
+        <pose>0 0 0 -1.571 0 0</pose>
+        <geometry>
+          <mesh>
+            <uri>model://bluerov2_heavy/meshes/t200_ccw_prop.dae</uri>
+          </mesh>
+        </geometry>
+      </visual>
+      <inertial>
+        <mass>0.002</mass>
+        <inertia>
+          <ixx>0.001</ixx>
+          <ixy>0</ixy>
+          <ixz>0</ixz>
+          <iyy>0.001</iyy>
+          <iyz>0</iyz>
+          <izz>0.001</izz>
+        </inertia>
+      </inertial>
+    </link>
+    <link name="thruster3">
+      <pose relative_to="base_link">-0.14 -0.092 0.0 -1.571 1.571 0.785</pose>
+      <visual name="thruster_prop_visual">
+        <pose>0 0 0 1.571 0 0</pose>
+        <geometry>
+          <mesh>
+            <uri>model://bluerov2_heavy/meshes/t200_cw_prop.dae</uri>
+          </mesh>
+        </geometry>
+      </visual>
+      <inertial>
+        <mass>0.002</mass>
+        <inertia>
+          <ixx>0.001</ixx>
+          <ixy>0</ixy>
+          <ixz>0</ixz>
+          <iyy>0.001</iyy>
+          <iyz>0</iyz>
+          <izz>0.001</izz>
+        </inertia>
+      </inertial>
+    </link>
+
+    <link name="thruster4">
+      <pose relative_to="base_link">-0.14 0.092 0.0 -1.571 1.571 2.356</pose>
+      <visual name="thruster_prop_visual">
+        <pose>0 0 0 1.571 0 0</pose>
+        <geometry>
+          <mesh>
+            <uri>model://bluerov2_heavy/meshes/t200_cw_prop.dae</uri>
+          </mesh>
+        </geometry>
+      </visual>
+      <inertial>
+        <mass>0.002</mass>
+        <inertia>
+          <ixx>0.001</ixx>
+          <ixy>0</ixy>
+          <ixz>0</ixz>
+          <iyy>0.001</iyy>
+          <iyz>0</iyz>
+          <izz>0.001</izz>
+        </inertia>
+      </inertial>
+    </link>
+
+
+
+    <link name="thruster5">
+      <pose relative_to="base_link">0.118 -0.215 0.064 0 0 0</pose>
+      <visual name="thruster_prop_visual">
+        <pose>0 0 0 -1.571 0 1.571</pose>
+        <geometry>
+          <mesh>
+            <uri>model://bluerov2_heavy/meshes/t200_ccw_prop.dae</uri>
+          </mesh>
+        </geometry>
+      </visual>
+      <inertial>
+        <mass>0.002</mass>
+        <inertia>
+          <ixx>0.001</ixx>
+          <ixy>0</ixy>
+          <ixz>0</ixz>
+          <iyy>0.001</iyy>
+          <iyz>0</iyz>
+          <izz>0.001</izz>
+        </inertia>
+      </inertial>
+    </link>
+
+    <link name="thruster6">
+      <pose relative_to="base_link">0.118 0.215 0.064 0 0 0</pose>
+      <visual name="thruster_prop_visual">
+        <pose>0 0 0 1.571 0 1.571</pose>
+        <geometry>
+          <mesh>
+            <uri>model://bluerov2_heavy/meshes/t200_cw_prop.dae</uri>
+          </mesh>
+        </geometry>
+      </visual>
+      <inertial>
+        <mass>0.002</mass>
+        <inertia>
+          <ixx>0.001</ixx>
+          <ixy>0</ixy>
+          <ixz>0</ixz>
+          <iyy>0.001</iyy>
+          <iyz>0</iyz>
+          <izz>0.001</izz>
+        </inertia>
+      </inertial>
+    </link>
+
+    <link name="thruster7">
+      <pose relative_to="base_link">-0.118 -0.215 0.064 0 0 0</pose>
+      <visual name="thruster_prop_visual">
+        <pose>0 0 0 1.571 0 1.571</pose>
+        <geometry>
+          <mesh>
+            <uri>model://bluerov2_heavy/meshes/t200_cw_prop.dae</uri>
+          </mesh>
+        </geometry>
+      </visual>
+      <inertial>
+        <mass>0.002</mass>
+        <inertia>
+          <ixx>0.001</ixx>
+          <ixy>0</ixy>
+          <ixz>0</ixz>
+          <iyy>0.001</iyy>
+          <iyz>0</iyz>
+          <izz>0.001</izz>
+        </inertia>
+      </inertial>
+    </link>
+
+    <link name="thruster8">
+      <pose relative_to="base_link">-0.118 0.215 0.064 0 0 0</pose>
+      <visual name="thruster_prop_visual">
+        <pose>0 0 0 -1.571 0 1.571</pose>
+        <geometry>
+          <mesh>
+            <uri>model://bluerov2_heavy/meshes/t200_ccw_prop.dae</uri>
+          </mesh>
+        </geometry>
+      </visual>
+      <inertial>
+        <mass>0.002</mass>
+        <inertia>
+          <ixx>0.001</ixx>
+          <ixy>0</ixy>
+          <ixz>0</ixz>
+          <iyy>0.001</iyy>
+          <iyz>0</iyz>
+          <izz>0.001</izz>
+        </inertia>
+      </inertial>
+    </link>
+
+    <joint name="thruster1_joint" type="revolute">
+      <parent>base_link</parent>
+      <child>thruster1</child>
+      <axis>
+        <xyz>0 0 1</xyz>     
+        <limit>          
+          <lower>-inf</lower> 
+          <upper>inf</upper>   
+          <effort>40</effort> <!-- 最大力矩 -->
+          <velocity>400</velocity> <!-- 最大转速 -->
+        </limit>
+
+      </axis>
+
+    </joint>
+
+    <joint name="thruster2_joint" type="revolute">
+      <parent>base_link</parent>
+      <child>thruster2</child>
+      <axis>
+        <xyz>0 0 1</xyz>
+        <limit>          
+          <lower>-inf</lower> 
+          <upper>inf</upper>  
+          <effort>40</effort> <!-- 最大力矩 -->
+          <velocity>400</velocity> <!-- 最大转速 -->  
+        </limit>        
+      </axis>
+
+    </joint>
+
+    <joint name="thruster3_joint" type="revolute">
+      <parent>base_link</parent>
+      <child>thruster3</child>
+      <axis>
+        <xyz>0 0 1</xyz>
+        <limit>          
+          <lower>-inf</lower>  
+          <upper>inf</upper>   
+          <effort>1000</effort> <!-- 最大力矩 -->
+          <velocity>400</velocity> <!-- 最大转速 -->
+        </limit>  
+      </axis>
+
+    </joint>
+
+    <joint name="thruster4_joint" type="revolute">
+      <parent>base_link</parent>
+      <child>thruster4</child>
+      <axis>
+        <xyz>0 0 1</xyz> 
+        <limit>          
+          <lower>-inf</lower> 
+          <upper>inf</upper>   
+          <effort>1000</effort> <!-- 最大力矩 -->
+          <velocity>400</velocity> <!-- 最大转速 -->
+        </limit>
+      </axis>
+
+    </joint>
+
+    <joint name="thruster5_joint" type="revolute">
+      <parent>base_link</parent>
+      <child>thruster5</child>
+      <axis>
+        <xyz>0 0 1</xyz>
+        <limit>          
+          <lower>-inf</lower> 
+          <upper>inf</upper>  
+          <effort>1000</effort> <!-- 最大力矩 -->
+          <velocity>400</velocity> <!-- 最大转速 -->
+        </limit>  
+      </axis>
+
+    </joint>
+
+    <joint name="thruster6_joint" type="revolute">
+      <parent>base_link</parent>
+      <child>thruster6</child>
+      <axis>
+        <xyz>0 0 -1</xyz>
+        <limit>          
+          <lower>-inf</lower> 
+          <upper>inf</upper>   
+          <effort>1000</effort> <!-- 最大力矩 -->
+          <velocity>400</velocity> <!-- 最大转速 -->
+        </limit>  
+      </axis>
+
+    </joint>
+
+    <joint name="thruster7_joint" type="revolute">
+      <parent>base_link</parent>
+      <child>thruster7</child>
+      <axis>
+        <xyz>0 0 -1</xyz>
+        <limit>          
+          <lower>-inf</lower> 
+          <upper>inf</upper>   
+          <effort>1000</effort> <!-- 最大力矩 -->
+
+          <velocity>400</velocity> <!-- 最大转速 -->
+        </limit>  
+      </axis>
+
+    </joint>
+
+    <joint name="thruster8_joint" type="revolute">
+      <parent>base_link</parent>
+      <child>thruster8</child>
+      <axis>
+        <xyz>0 0 1</xyz>
+        <limit>          
+          <lower>-inf</lower>  
+          <upper>inf</upper>   
+          <effort>1000</effort> <!-- 最大力矩 -->
+          <velocity>400</velocity> <!-- 最大转速 -->
+        </limit>  
+      </axis>
+    </joint>
+ 		<transmission name="thruster1_tran">
+			<type>transmission_interface/SimpleTransmission</type>
+			<joint name="thruster1_joint">
+				<hardwareInterface>hardware_interface/VelocityJointInterface</hardwareInterface>
+			</joint>
+			<actuator name="thruster1_motor">
+				<hardwareInterface>hardware_interface/VelocityJointInterface</hardwareInterface>
+				<mechanicalReduction>1</mechanicalReduction>
+			</actuator>
+		</transmission>
+ 		<transmission name="thruster2_tran">
+			<type>transmission_interface/SimpleTransmission</type>
+			<joint name="thruster2_joint">
+				<hardwareInterface>hardware_interface/VelocityJointInterface</hardwareInterface>
+			</joint>
+			<actuator name="thruster2_motor">
+				<hardwareInterface>hardware_interface/VelocityJointInterface</hardwareInterface>
+				<mechanicalReduction>1</mechanicalReduction>
+			</actuator>
+		</transmission> 
+ 		<transmission name="thruster3_tran">
+			<type>transmission_interface/SimpleTransmission</type>
+			<joint name="thruster3_joint">
+				<hardwareInterface>hardware_interface/VelocityJointInterface</hardwareInterface>
+			</joint>
+			<actuator name="thruster3_motor">
+				<hardwareInterface>hardware_interface/VelocityJointInterface</hardwareInterface>
+				<mechanicalReduction>1</mechanicalReduction>
+			</actuator>
+		</transmission>
+ 		<transmission name="thruster4_tran">
+			<type>transmission_interface/SimpleTransmission</type>
+			<joint name="thruster4_joint">
+				<hardwareInterface>hardware_interface/VelocityJointInterface</hardwareInterface>
+			</joint>
+			<actuator name="thruster4_motor">
+				<hardwareInterface>hardware_interface/VelocityJointInterface</hardwareInterface>
+				<mechanicalReduction>1</mechanicalReduction>
+			</actuator>
+		</transmission>
+ 		<transmission name="thruster5_tran">
+			<type>transmission_interface/SimpleTransmission</type>
+			<joint name="thruster5_joint">
+				<hardwareInterface>hardware_interface/VelocityJointInterface</hardwareInterface>
+			</joint>
+			<actuator name="thruster5_motor">
+				<hardwareInterface>hardware_interface/VelocityJointInterface</hardwareInterface>
+				<mechanicalReduction>1</mechanicalReduction>
+			</actuator>
+		</transmission>
+ 		<transmission name="thruster6_tran">
+			<type>transmission_interface/SimpleTransmission</type>
+			<joint name="thruster6_joint">
+				<hardwareInterface>hardware_interface/VelocityJointInterface</hardwareInterface>
+			</joint>
+			<actuator name="thruster6_motor">
+				<hardwareInterface>hardware_interface/VelocityJointInterface</hardwareInterface>
+				<mechanicalReduction>1</mechanicalReduction>
+			</actuator>
+		</transmission>
+ 		<transmission name="thruster7_tran">
+			<type>transmission_interface/SimpleTransmission</type>
+			<joint name="thruster7_joint">
+				<hardwareInterface>hardware_interface/VelocityJointInterface</hardwareInterface>
+			</joint>
+			<actuator name="thruster7_motor">
+				<hardwareInterface>hardware_interface/VelocityJointInterface</hardwareInterface>
+				<mechanicalReduction>1</mechanicalReduction>
+			</actuator>
+		</transmission>
+ 		<transmission name="thruster8_tran">
+			<type>transmission_interface/SimpleTransmission</type>
+			<joint name="thruster8_joint">
+				<hardwareInterface>hardware_interface/VelocityJointInterface</hardwareInterface>
+			</joint>
+			<actuator name="thruster8_motor">
+				<hardwareInterface>hardware_interface/VelocityJointInterface</hardwareInterface>
+				<mechanicalReduction>1</mechanicalReduction>
+			</actuator>
+		</transmission>
+
+    <plugin
+      filename="gz-sim-odometry-publisher-system"
+      name="gz::sim::systems::OdometryPublisher">
+      <odom_frame>odom</odom_frame>
+      <robot_base_frame>base_link</robot_base_frame>
+      <dimensions>3</dimensions>
+      <odom_publish_frequency>1000</odom_publish_frequency>
+    </plugin>
+        <!-- 添加ros2_control系统 -->
+    <ros2_control name="GazeboSimSystem" type="system">
+      <hardware>
+        <plugin>gz_underwater_hardware/GazeboSimSystem</plugin>
+      </hardware>
+  
+      <!-- 为每个推进器关节配置接口 -->
+      <joint name="thruster1_joint">
+        <!-- <command_interface name="position"/> -->
+        <command_interface name="velocity"/>
+        <!-- <command_interface name="effort"> -->
+          <!-- <param name="min">-40</param>
+          <param name="max">40</param>
+        </command_interface> -->
+        <command_interface name="thrust"/>
+
+        <state_interface name="position"/>
+        <state_interface name="velocity"/>
+        <state_interface name="effort"/>
+        <state_interface name="thrust"/>
+      </joint>
+      <joint name="thruster2_joint">
+        <!-- <command_interface name="position"/> -->
+        <command_interface name="velocity"/>
+        <!-- <command_interface name="effort"> -->
+          <!-- <param name="min">-40</param>
+          <param name="max">40</param>
+        </command_interface> -->
+        <command_interface name="thrust"/>
+
+
+        <state_interface name="position"/>
+        <state_interface name="velocity"/>
+        <state_interface name="effort"/>
+        <state_interface name="thrust"/>
+      </joint>
+      <joint name="thruster3_joint">
+        <!-- <command_interface name="position"/> -->
+        <command_interface name="velocity"/>
+        <!-- <command_interface name="effort"> -->
+          <!-- <param name="min">-40</param>
+          <param name="max">40</param>
+        </command_interface> -->
+        <command_interface name="thrust"/>
+
+
+        <state_interface name="position"/>
+        <state_interface name="velocity"/>
+        <state_interface name="effort"/>
+        <state_interface name="thrust"/>
+      </joint>
+      <joint name="thruster4_joint">
+        <!-- <command_interface name="position"/> -->
+        <command_interface name="velocity"/>
+        <!-- <command_interface name="effort"> -->
+          <!-- <param name="min">-40</param>
+          <param name="max">40</param>
+        </command_interface> -->
+        <command_interface name="thrust"/>
+
+        <state_interface name="position"/>
+        <state_interface name="velocity"/>
+        <state_interface name="effort"/>
+        <state_interface name="thrust"/>
+      </joint>
+      <joint name="thruster5_joint">
+        <!-- <command_interface name="position"/> -->
+        <command_interface name="velocity"/>
+        <!-- <command_interface name="effort"> -->
+          <!-- <param name="min">-40</param>
+          <param name="max">40</param>
+        </command_interface> -->
+        <command_interface name="thrust"/>
+
+        <state_interface name="position"/>
+        <state_interface name="velocity"/>
+        <state_interface name="effort"/>
+        <state_interface name="thrust"/>
+      </joint>
+      <joint name="thruster6_joint">
+        <!-- <command_interface name="position"/> -->
+        <command_interface name="velocity"/>
+        <!-- <command_interface name="effort"> -->
+          <!-- <param name="min">-40</param>
+          <param name="max">40</param>
+        </command_interface> -->
+        <command_interface name="thrust"/>
+
+        <state_interface name="position"/>
+        <state_interface name="velocity"/>
+        <state_interface name="effort"/>
+        <state_interface name="thrust"/>
+      </joint>
+      <joint name="thruster7_joint">
+        <!-- <command_interface name="position"/> -->
+        <command_interface name="velocity"/>
+        <!-- <command_interface name="effort"> -->
+          <!-- <param name="min">-40</param>
+          <param name="max">40</param>
+        </command_interface>      -->
+        <command_interface name="thrust"/>
+
+        <state_interface name="position"/>
+        <state_interface name="velocity"/>
+        <state_interface name="effort"/>
+        <state_interface name="thrust"/>
+      </joint>
+      <joint name="thruster8_joint">
+        <!-- <command_interface name="position"/> -->
+        <command_interface name="velocity"/>
+        <!-- <command_interface name="effort"> -->
+          <!-- <param name="min">-40</param>
+          <param name="max">40</param>
+        </command_interface> -->
+        <command_interface name="thrust"/>
+
+        <state_interface name="position"/>
+        <state_interface name="velocity"/>
+        <state_interface name="effort"/>
+        <state_interface name="thrust"/>
+      </joint>
+      <sensor name="imu_sensor">
+        <state_interface name="orientation.x"/>
+        <state_interface name="orientation.y"/>
+        <state_interface name="orientation.z"/>
+        <state_interface name="orientation.w"/>
+        <state_interface name="angular_velocity.x"/>
+        <state_interface name="angular_velocity.y"/>
+        <state_interface name="angular_velocity.z"/>
+        <state_interface name="linear_acceleration.x"/>
+        <state_interface name="linear_acceleration.y"/>
+        <state_interface name="linear_acceleration.z"/>
+      </sensor>
+
+    </ros2_control>
+
+    <!-- 添加gz_ros2_control插件 -->
+    <plugin name="gz_underwater_hardware::GazeboSimUnderwaterPlugin" filename="gz_underwater_hardware-system">
+      <parameters>$(find bluerov2_heavy)/config/gazebo.yaml</parameters>
+      <thruster_coefficient>1.5625 1.5625 -1.5625 -1.5625 1.5625 1.5625 1.5625 1.5625</thruster_coefficient>
+      <propeller_diameter>0.02 0.02 0.02 0.02 0.02 0.02 0.02 0.02</propeller_diameter>
+      <thruster_num>8</thruster_num>
+    </plugin>
+
+  </model>
+</sdf>

@@ -1,0 +1,9 @@
+<library path="acados_nmpc_controller">
+  <class name="acados_nmpc_controller/Acados_NMPC_Controller"
+         type="acados_nmpc_controller::Acados_NMPC_Controller"
+         base_class_type="controller_interface::ControllerInterface">
+    <description>
+        Bluerov NMPC Controller based on acados.
+    </description>
+  </class>
+</library>

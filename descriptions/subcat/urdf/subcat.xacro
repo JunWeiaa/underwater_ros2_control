@@ -1,0 +1,8 @@
+<?xml version="1.0"?>
+<robot xmlns:xacro="http://ros.org/wiki/xacro" name="subcat">
+  <xacro:include filename="$(find subcat)/urdf/base_link.xacro"/>
+  <xacro:include filename="$(find subcat)/urdf/imu_link.xacro"/>
+  <xacro:include filename="$(find subcat)/urdf/thrusters.xacro"/>
+  <xacro:include filename="$(find subcat)/urdf/servos.xacro"/>
+  <xacro:include filename="$(find subcat)/urdf/real_plugins.xacro"/>
+</robot>

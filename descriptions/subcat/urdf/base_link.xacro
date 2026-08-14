@@ -1,0 +1,37 @@
+<?xml version="1.0"?>
+<robot xmlns:xacro="http://ros.org/wiki/xacro">
+  <link name="base_link">
+    <inertial>
+    <!-- //-0.00774480  0.00016231-->
+      <origin xyz="-0.00774480 0.00008983 0.00016231" rpy="0 0 0"/>
+      <mass value="11.43852908"/>
+      <inertia
+        ixx="0.11378139"
+        ixy="0.00050478"
+        ixz="-0.00380455"
+        iyy="0.23707342"
+        iyz="-0.00007544"
+        izz="0.31643359" />
+    </inertial>
+    <visual name="base_link_visual">
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <geometry>
+        <mesh filename="file://$(find subcat)/meshes/base_link.STL" />
+      </geometry>
+      <material
+        name="blue">
+          <color
+            rgba="0.2 0.4 0.8 1" />
+        </material>
+    </visual>
+    <collision name="base_link_collision">
+      <origin
+        xyz="0 0 0.03"
+        rpy="0 0 0" />
+      <geometry>
+        <box size="0.346 0.3736 0.11062579"/>
+      </geometry>
+    </collision>
+  </link>
+
+</robot>

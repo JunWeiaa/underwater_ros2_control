@@ -1,0 +1,10 @@
+<library path="real_underwater_hardware">
+  <class
+    name="real_underwater_hardware/RealSystem"
+    type="real_underwater_hardware::RealSystem"
+    base_class_type="hardware_interface::SystemInterface">
+    <description>
+      Real underwater ros2_control plugin for underwater robot.
+    </description>
+  </class>
+</library>

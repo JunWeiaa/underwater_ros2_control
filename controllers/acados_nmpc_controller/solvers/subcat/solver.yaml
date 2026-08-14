@@ -1,0 +1,4 @@
+solver_id: subcat
+model_name: subcat
+macro_prefix: SUBCAT
+has_p_global: false

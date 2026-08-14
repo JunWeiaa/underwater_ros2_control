@@ -1,0 +1,10 @@
+<library path="gz_underwater_plugin">
+  <class
+    name="gz_underwater_hardware/GazeboSimSystem"
+    type="gz_underwater_hardware::GazeboSimSystem"
+    base_class_type="gz_underwater_hardware::GazeboSimSystemInterface">
+    <description>
+      Gazebo ros2_control plugin for underwater robot.
+    </description>
+  </class>
+</library>

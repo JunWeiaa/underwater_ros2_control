@@ -1,0 +1,24 @@
+<?xml version="1.0"?>
+<robot xmlns:xacro="http://ros.org/wiki/xacro">
+  <!-- 8个transmission，建议用xacro宏 -->
+  <xacro:macro name="thruster_transmission" params="num">
+    <transmission name="thruster${num}_tran">
+      <type>transmission_interface/SimpleTransmission</type>
+      <joint name="thruster${num}_joint">
+        <hardwareInterface>hardware_interface/VelocityJointInterface</hardwareInterface>
+      </joint>
+      <actuator name="thruster${num}_motor">
+        <hardwareInterface>hardware_interface/VelocityJointInterface</hardwareInterface>
+        <mechanicalReduction>1</mechanicalReduction>
+      </actuator>
+    </transmission>
+  </xacro:macro>
+  <xacro:thruster_transmission num="1"/>
+  <xacro:thruster_transmission num="2"/>
+  <xacro:thruster_transmission num="3"/>
+  <xacro:thruster_transmission num="4"/>
+  <xacro:thruster_transmission num="5"/>
+  <xacro:thruster_transmission num="6"/>
+  <xacro:thruster_transmission num="7"/>
+  <xacro:thruster_transmission num="8"/>
+</robot>

@@ -1,0 +1,65 @@
+<?xml version="1.0"?>
+<robot xmlns:xacro="http://ros.org/wiki/xacro">
+    <!-- ros2_control系统 -->
+    <ros2_control name="RealSystem" type="system">
+      <hardware>
+        <plugin>real_underwater_hardware/RealSystem</plugin>
+        <param name="robot_name">subcat</param>
+        <param name="mavros_namespace">/mavros</param>
+        <param name="thrust_pwm_model">subcat</param>
+        <param name="thrust_channels">1 2 3 4</param>
+        <param name="thrust_channel_scales">1 -1 -1 1</param>
+        <param name="servo_enabled">true</param>
+        <param name="servo_count">4</param>
+        <param name="servo0_port">/dev/ttyACM1</param>
+        <param name="servo1_port">/dev/ttyACM2</param>
+        <param name="servo2_port">/dev/ttyACM3</param>
+        <param name="servo3_port">/dev/ttyACM4</param>
+        <param name="servo_command_map">1 0 2 3</param>
+        <param name="servo_offsets">0.10 0.05235 -0.112 0.10</param>
+        <param name="servo_scales">1 1 -1 -1</param>
+        <param name="servo_timeout_ms">100</param>
+        <param name="servo_duration_ms">10</param>
+      </hardware>
+      <!-- 8个推进器joint接口，建议用xacro宏 -->
+     <xacro:macro name="thruster_control_interface" params="num">
+        <joint name="thruster${num}_joint">
+          <command_interface name="thrust"/>
+          <state_interface name="position"/>
+          <state_interface name="velocity"/>
+          <state_interface name="effort"/>
+        </joint>
+      </xacro:macro>
+      <xacro:thruster_control_interface num="1"/>
+      <xacro:thruster_control_interface num="2"/>
+      <xacro:thruster_control_interface num="3"/>
+      <xacro:thruster_control_interface num="4"/>
+
+      <xacro:macro name="servo_control_interface" params="num">
+        <joint name="servo${num}_joint">
+          <command_interface name="position"/>
+          <state_interface name="position"/>
+          <state_interface name="velocity"/>
+          <state_interface name="effort"/>
+        </joint>
+      </xacro:macro>
+      <xacro:servo_control_interface num="1"/>
+      <xacro:servo_control_interface num="2"/>
+      <xacro:servo_control_interface num="3"/>
+      <xacro:servo_control_interface num="4"/>
+
+      <sensor name="imu_sensor">
+        <state_interface name="orientation.x"/>
+        <state_interface name="orientation.y"/>
+        <state_interface name="orientation.z"/>
+        <state_interface name="orientation.w"/>
+        <state_interface name="angular_velocity.x"/>
+        <state_interface name="angular_velocity.y"/>
+        <state_interface name="angular_velocity.z"/>
+        <state_interface name="linear_acceleration.x"/>
+        <state_interface name="linear_acceleration.y"/>
+        <state_interface name="linear_acceleration.z"/>
+      </sensor>
+    </ros2_control>
+
+</robot>
