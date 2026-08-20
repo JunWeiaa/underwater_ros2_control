@@ -1,9 +1,9 @@
-# underwater_ros2_control Launch Commands
+# Launch Guide
 
 All commands below assume the workspace root is:
 
 ```bash
-cd ~/Documents/underwater_ros2_control_merge/bluerov2_ws
+cd ~/underwater_ws
 source install/setup.bash
 ```
 
@@ -233,6 +233,15 @@ Q/E      yaw left/right
 ```
 
 ## Quick Checks
+
+If a fresh single-robot launch unexpectedly prints `/clock already exists; skipping Gazebo launch`,
+check for an old Gazebo process before launching again:
+
+```bash
+pgrep -af "gz sim"
+```
+
+Stop stale processes before starting a new single-robot session.
 
 List command topics:
 

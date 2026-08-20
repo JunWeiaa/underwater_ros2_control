@@ -1,7 +1,3 @@
-//
-// Created by biao on 3/15/25.
-//
-
 #ifndef CTRLCOMPONENT_H
 #define CTRLCOMPONENT_H
 #include <memory>

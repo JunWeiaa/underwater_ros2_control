@@ -52,15 +52,15 @@ protected:
     rclcpp::Publisher<nav_msgs::msg::Path>::SharedPtr currpath_pub_;
     rclcpp::Subscription<std_msgs::msg::Float64MultiArray>::SharedPtr target_bspline_sub_;
     rclcpp_lifecycle::LifecycleNode::SharedPtr node_;
-    std::atomic<std::shared_ptr<TargetTrajectories>> trajectory_buffer_; // 线程安全的轨迹缓冲区
+    std::atomic<std::shared_ptr<TargetTrajectories>> trajectory_buffer_; // Thread-safe trajectory buffer
     mutable std::mutex trajectory_mutex_;
-    long curr_time{0};                                                   // 轨迹开始时间戳，单位ns
-    long curr_duration{0};                                               // 从轨迹开始到当前的时间差，单位ns
-    int current_index_ = 0;                                              // 当前轨迹的起始索引
-    double dt_p{0.025};                                                  // 预测时间步长（25 ms）
-    double dt_ = 0.001;                                                  // 控制时间步长（1 ms）
-    int k_p = 0;                                                         // 预测控制步长比例
-    int horizon_steps_ = 20;                                             // 预测步数（1 秒分为 20 步）
+    long curr_time{0};                                                   // Trajectory start timestamp, ns
+    long curr_duration{0};                                               // Elapsed time from trajectory start, ns
+    int current_index_ = 0;                                              // Current trajectory window start index
+    double dt_p{0.025};                                                  // Prediction time step, 25 ms
+    double dt_ = 0.001;                                                  // Control time step, 1 ms
+    int k_p = 0;                                                         // Prediction/control step ratio
+    int horizon_steps_ = 20;                                             // Prediction horizon steps
     int path_publish_step_{1};                                           // Full trajectory visualization decimation
     double curr_path_publish_rate_{20.0};                                // Current horizon visualization Hz
     int64_t last_curr_path_publish_time_ns_{0};
@@ -77,8 +77,8 @@ protected:
     nav_msgs::msg::Path current_path_msg_;
     TargetInfoLoader target_info_loader_;
     BsplineTrajectorySource bspline_source_;
-    bool is_trajectory_updated_{false};                                  // 轨迹是否更新的标志
-    bool is_traj_track_started_{false};                                  // 轨迹缓冲区是否更新的标志
+    bool is_trajectory_updated_{false};                                  // Full trajectory update flag
+    bool is_traj_track_started_{false};                                  // Trajectory tracking state flag
 };
 
 #endif // _TARGETMANGER_HPP

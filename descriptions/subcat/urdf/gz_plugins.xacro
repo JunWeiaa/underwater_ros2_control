@@ -1,11 +1,11 @@
 <?xml version="1.0"?>
 <robot xmlns:xacro="http://ros.org/wiki/xacro">
-  <!-- ros2_control系统 -->
+  <!-- ros2_control system -->
   <ros2_control name="GazeboSimSystem" type="system">
     <hardware>
       <plugin>gz_underwater_hardware/GazeboSimSystem</plugin>
     </hardware>
-    <!-- 4个推进器joint接口，建议用xacro宏 -->
+    <!-- Thruster joint interfaces -->
     <xacro:macro name="thruster_control_interface" params="num">
       <joint name="thruster${num}_joint">
         <command_interface name="thrust"/>
@@ -50,24 +50,20 @@
     <plugin filename="gz-sim-hydrodynamics-system" name="gz::sim::systems::Hydrodynamics">
       <link_name>base_link</link_name>
       <water_density>1000.0</water_density>
-      <!-- <xDotU>-2.8</xDotU>
-      <yDotV>-6.5</yDotV>
-      <zDotW>-7.2</zDotW>
-      <kDotP>-0.08</kDotP>
-      <mDotQ>-0.08</mDotQ>
-      <nDotR>-0.08</nDotR> -->
-      <xU>-0.387413</xU>
-      <yV>-1.314762</yV>
+      <!-- DART uses native added mass; keep legacy plugin added mass disabled. -->
+      <disable_added_mass>true</disable_added_mass>
+      <xU>-0.387</xU>
+      <yV>-1.315</yV>
       <zW>0</zW>
-      <kP>-0.138612</kP>
+      <kP>-0.139</kP>
       <mQ>0</mQ>
-      <nR>-0.07</nR>
-      <xUabsU>-30.378703</xUabsU>
-      <yVabsV>-33.524885</yVabsV>
-      <zWabsW>-117.4115</zWabsW>
-      <kPabsP> -0.503968</kPabsP>
-      <mQabsQ>-0.601956</mQabsQ>
-      <nRabsR>-0.2</nRabsR>
+      <nR>-0.0854</nR>
+      <xUabsU>-30.379</xUabsU>
+      <yVabsV>-33.525</yVabsV>
+      <zWabsW>-117.412</zWabsW>
+      <kPabsP>-0.504</kPabsP>
+      <mQabsQ>-0.602</mQabsQ>
+      <nRabsR>-0.487</nRabsR>
     </plugin>
     <plugin filename="gz-sim-odometry-publisher-system" name="gz::sim::systems::OdometryPublisher">
       <odom_frame>odom</odom_frame>
@@ -95,7 +91,7 @@
   </gazebo>
   <gazebo reference="imu_joint">
     <disableFixedJointLumping>true</disableFixedJointLumping>
-  </gazebo>  
+  </gazebo>
 
 
 </robot>

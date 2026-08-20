@@ -44,7 +44,6 @@ set(acados_libraries
   "${acados_lib}/libacados.so"
   "${acados_lib}/libhpipm.so"
   "${acados_lib}/libblasfeo.so"
-  "${acados_lib}/libqpOASES_e.so"
   m
 )
 
@@ -129,7 +128,6 @@ function(add_generated_solver metadata_file solver_targets_var)
       "${acados_include}/blasfeo/include"
       "${acados_include}/hpipm/include"
       "${acados_include}/acados"
-      "${acados_include}/qpOASES_e"
   )
   target_link_libraries(${solver_target} PUBLIC ${acados_libraries})
   if(OpenMP_C_FOUND)
@@ -198,7 +196,6 @@ target_include_directories(acados_nmpc_controller
     "${acados_include}/blasfeo/include"
     "${acados_include}/hpipm/include"
     "${acados_include}/acados"
-    "${acados_include}/qpOASES_e"
 )
 ament_target_dependencies(acados_nmpc_controller PUBLIC ${CONTROLLER_INCLUDE_DEPENDS})
 target_link_libraries(acados_nmpc_controller PUBLIC ${acados_libraries})

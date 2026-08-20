@@ -1,7 +1,3 @@
-//
-// Created by biao on 3/15/25.
-//
-
 #include "acados_nmpc_controller/control/CtrlComponent.h"
 
 #include <acados_nmpc_controller/estimator/GroundTruth.h>

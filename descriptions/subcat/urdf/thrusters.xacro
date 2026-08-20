@@ -1,10 +1,10 @@
 <?xml version="1.0"?>
 <robot xmlns:xacro="http://ros.org/wiki/xacro">
-  <!-- 8个推进器link和joint，建议用xacro宏简化 -->
+  <!-- Thruster link and joint macro -->
   <xacro:macro name="thruster" params="num origin_pose inertia pose mesh_uri joint_axis joint_xyz joint_effort joint_velocity">
     <xacro:property name="origin_list" value="${origin_pose.split(' ')}"/>
     <xacro:property name="inertia_list" value="${inertia.split(' ')}"/>
-    <!-- pose: x y z r p y (joint的origin) -->
+    <!-- pose: x y z roll pitch yaw for the joint origin -->
     <xacro:property name="pose_list" value="${pose.split(' ')}"/>
     <link name="thruster${num}">
       <inertial>
@@ -37,7 +37,7 @@
     </joint>
   </xacro:macro>
 
-  <!-- 实例化8个推进器，mesh_rpy参数与SDF visual/pose一致，scale与SDF一致 -->
+  <!-- Thruster instances with poses matching the SDF visual configuration -->
   <xacro:thruster num="1" origin_pose="0.00000000 0.00000000 0.00000000 0 0 0" inertia="0.00000401 0.00000000 0.00000000 0.00000401 0.00000000 0.00000766" pose="0 -0.0045016 0.0862 -1.5708 -1.5708 0" mesh_uri="file://$(find subcat)/meshes/thruster1_link.STL"  joint_axis="revolute" joint_xyz="0 0 -1" joint_effort="40" joint_velocity="400"/>
   <xacro:thruster num="2" origin_pose="0.00000000 0.00000000 0.00000000 0 0 0" inertia="0.00000401 0.00000000 0.00000000 0.00000401 0.00000000 0.00000766" pose="0 -0.0045016 0.0862 -1.5708 -1.5708 0" mesh_uri="file://$(find subcat)/meshes/thruster2_link.STL"  joint_axis="revolute" joint_xyz="0 0 -1" joint_effort="40" joint_velocity="400"/>
   <xacro:thruster num="3" origin_pose="0.00000000 0.00000000 0.00000000 0 0 0" inertia="0.00000401 0.00000000 0.00000000 0.00000401 0.00000000 0.00000766" pose="0 0.0045016 0.0862 -1.5708 1.5708 0" mesh_uri="file://$(find subcat)/meshes/thruster3_link.STL"  joint_axis="revolute" joint_xyz="0 0 1" joint_effort="40" joint_velocity="400"/>

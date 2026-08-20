@@ -1,7 +1,3 @@
-//
-// Created by biao on 25-2-23.
-//
-
 #include "acados_nmpc_controller/estimator/FromOdomTopic.h"
 #include "nav_msgs/msg/odometry.hpp"
 #include <cmath>

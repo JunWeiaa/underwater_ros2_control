@@ -139,27 +139,27 @@ void StateManual::enter() {
                 executeAndSleep(
                     [&] {
                         if (mpc_running_) {
-                            // 人的操控直觉：输入的是机体坐标系 (Body FRD) 下的速度
+                            // Treat cmd_vel as body-frame FRD velocity commands.
                             const auto cmd_vel = readCmdVel();
-                            double u = cmd_vel.linear.x; // 机体前向 Surge (北向/Forward)
-                            double v = cmd_vel.linear.y; // 机体侧向 Sway (东向/Right)
-                            double w = cmd_vel.linear.z; // 机体下潜 Heave (地心/Down)
+                            double u = cmd_vel.linear.x; // Surge, forward
+                            double v = cmd_vel.linear.y; // Sway, right
+                            double w = cmd_vel.linear.z; // Heave, down
                             double r = cmd_vel.angular.z;
 
                             const double dt = 1.0 / mpc_frequency_;
 
-                            // 获取当前的偏航角 (Global Yaw)，用来把机体速度积分到全局位置
+                            // Use global yaw to integrate body velocity into NED position.
                             vector3_t euler = quatToZyx(quaternion_t(target_state_(3), target_state_(4), target_state_(5), target_state_(6)));
                             double current_yaw = euler(0);
 
                             current_yaw += r * dt;
 
-                            // 从机体(Body)坐标系旋转到全局(Global NED)坐标系
+                            // Rotate body velocity into global NED.
                             double dx_global = u * std::cos(current_yaw) - v * std::sin(current_yaw);
                             double dy_global = u * std::sin(current_yaw) + v * std::cos(current_yaw);
                             double dz_global = w;
 
-                            // 在全局 NED 中积分位置
+                            // Integrate position in global NED.
                             target_state_(0) += dx_global * dt;
                             target_state_(1) += dy_global * dt;
                             target_state_(2) += dz_global * dt;
@@ -185,7 +185,7 @@ void StateManual::enter() {
                             target_state_(5) = q.y();
                             target_state_(6) = q.z();
 
-                            // 目标速度就是输入的机体速度 (Body FRD velocities)
+                            // Target velocity follows the body-frame FRD command.
                             target_state_(7) = u; // u (Surge)
                             target_state_(8) = v; // v (Sway)
                             target_state_(9) = w; // w (Heave)
@@ -226,7 +226,7 @@ void StateManual::enter() {
                 {
                     std::lock_guard<std::mutex> lock(u0_mutex_);
                     opt_failed_ = true;
-                    u0 = default_u0; // 使用默认值
+                    u0 = default_u0;
                     ctrl_component_->observation_.input = u0;
                     u0_updated_ = true;
                 }

@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <robot xmlns:xacro="http://ros.org/wiki/xacro">
-  <!-- 8个transmission，建议用xacro宏 -->
+  <!-- Thruster transmission macro -->
   <xacro:macro name="thruster_transmission" params="num">
     <transmission name="thruster${num}_tran">
       <type>transmission_interface/SimpleTransmission</type>

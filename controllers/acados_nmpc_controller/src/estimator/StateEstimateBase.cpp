@@ -110,7 +110,7 @@ void StateEstimateBase::initPublishers() {
 }
 
 void StateEstimateBase::updateAngular(const quaternion_t &quat, const vector_t &angularVel) {
-    // 完整的坐标系转换：(ENU, FLU) → (NED, FRD)
+    // Convert pose from ENU/FLU to NED/FRD.
 
     quaternion_t q_enu_to_ned;
     q_enu_to_ned.w() = 0.0;
@@ -118,21 +118,21 @@ void StateEstimateBase::updateAngular(const quaternion_t &quat, const vector_t &
     q_enu_to_ned.y() = 0.7071; // sqrt(2)/2
     q_enu_to_ned.z() = 0.0;
 
-    // FLU到FRD的变换四元数 (180°绕X轴)
+    // FLU to FRD rotation quaternion: 180 degrees about X.
     quaternion_t q_flu_to_frd(0.0, 1.0, 0.0, 0.0);
 
-    // 复合变换：q_ned_frd = q_enu_to_ned * q_enu_flu * q_flu_to_frd
+    // Compose q_ned_frd = q_enu_to_ned * q_enu_flu * q_flu_to_frd.
     quaternion_t quat_ned_frd = q_enu_to_ned * quat * q_flu_to_frd;
 
-    // 确保四元数实部为正（标准化约定）
+    // Keep the scalar part positive as the normalization convention.
     if (quat_ned_frd.w() < 0) {
         quat_ned_frd.coeffs() = -quat_ned_frd.coeffs();
     }
 
-    // 存储NED坐标系下FRD机体的四元数
+    // Store the FRD body quaternion in the NED frame.
     rbd_state_.segment<4>(3) << quat_ned_frd.w(), quat_ned_frd.x(), quat_ned_frd.y(), quat_ned_frd.z();
 
-    // 角速度转换：从FLU机体系转换到FRD机体系
+    // Convert angular velocity from FLU body frame to FRD body frame.
     // X_frd = X_flu, Y_frd = -Y_flu, Z_frd = -Z_flu
     vector_t angularVel_frd(3);
     angularVel_frd(0) = angularVel(0);  // p (roll rate)
@@ -143,7 +143,7 @@ void StateEstimateBase::updateAngular(const quaternion_t &quat, const vector_t &
 }
 
 void StateEstimateBase::updateLinear(const vector_t &pos, const vector_t &linearVel) {
-    // 位置坐标系转换：ENU → NED
+    // Convert position from ENU to NED.
     // X_ned = Y_enu (North = East)
     // Y_ned = X_enu (East = North)
     // Z_ned = -Z_enu (Down = -Up)
@@ -153,14 +153,14 @@ void StateEstimateBase::updateLinear(const vector_t &pos, const vector_t &linear
     pos_ned(1) = pos(0);  // East = North
     pos_ned(2) = -pos(2); // Down = -Up
 
-    // FLU → FRD 机体系速度转换
+    // Convert linear velocity from FLU body frame to FRD body frame.
     vector_t linearVel_frd(3);
-    linearVel_frd(0) = linearVel(0);  // X: Forward保持不变
-    linearVel_frd(1) = -linearVel(1); // Y: Left→Right (取反)
-    linearVel_frd(2) = -linearVel(2); // Z: Up→Down (取反)
+    linearVel_frd(0) = linearVel(0);  // X: forward unchanged
+    linearVel_frd(1) = -linearVel(1); // Y: left to right
+    linearVel_frd(2) = -linearVel(2); // Z: up to down
 
     rbd_state_.segment<3>(0) = pos_ned;
-    rbd_state_.segment<3>(7) = linearVel_frd; // 存储FRD机体系速度
+    rbd_state_.segment<3>(7) = linearVel_frd;
 }
 
 void StateEstimateBase::publishMsgs(const nav_msgs::msg::Odometry &odom) const {

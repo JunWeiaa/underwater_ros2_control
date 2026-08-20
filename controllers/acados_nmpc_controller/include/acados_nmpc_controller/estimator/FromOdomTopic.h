@@ -1,7 +1,3 @@
-//
-// Created by biao on 25-2-23.
-//
-
 #pragma once
 #include "StateEstimateBase.h"
 #include "nav_msgs/msg/odometry.hpp"

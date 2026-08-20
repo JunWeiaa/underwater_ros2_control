@@ -397,7 +397,6 @@ void GazeboSimUnderwaterPlugin::Configure(
     std::istringstream coeffStream(coeffStr);
     std::vector<double> coeffValues;
     double value;
-    // 将字符串解析为 double 值
     while (coeffStream >> value) {
         coeffValues.push_back(value);
     }
@@ -418,7 +417,6 @@ void GazeboSimUnderwaterPlugin::Configure(
     std::istringstream propStream(propellerDiameterStr);
     std::vector<double> propValues;
     double value2;
-    // 将字符串解析为 double 值
     while (propStream >> value2) {
         propValues.push_back(value2);
     }
@@ -556,16 +554,16 @@ void GazeboSimUnderwaterPlugin::PostUpdate(
         return;
     }
 
-    // 用 node 的 clock 获取时间，确保 clock_type 一致
+    // Use the node clock so clock types stay consistent.
     rclcpp::Time sim_time_ros = this->dataPtr->node_->get_clock()->now();
 
-    // 首次调用时初始化时间
+    // Initialize timestamp on the first update.
     if (this->dataPtr->last_update_sim_time_ros_.nanoseconds() <= 0) {
         this->dataPtr->last_update_sim_time_ros_ = sim_time_ros;
         return;
     }
 
-    // 安全计算时间差（避免回退时间）
+    // Compute period defensively and reset on backward time jumps.
     const int64_t period_ns = sim_time_ros.nanoseconds() - this->dataPtr->last_update_sim_time_ros_.nanoseconds();
     if (period_ns < 0) {
         gzwarn << "Detected time jump backward. Resetting last update time.\n";
@@ -575,7 +573,7 @@ void GazeboSimUnderwaterPlugin::PostUpdate(
 
     const rclcpp::Duration sim_period(period_ns, sim_time_ros.get_clock_type());
 
-    // 检查控制周期
+    // Run only at the configured control period.
     if (sim_period >= this->dataPtr->control_period_) {
         try {
             this->dataPtr->last_update_sim_time_ros_ = sim_time_ros;

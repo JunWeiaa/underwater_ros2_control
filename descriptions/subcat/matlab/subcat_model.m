@@ -1,48 +1,40 @@
-function model = BlueROV_heavy_model()
+function model = subcat_model()
 import casadi.*
-nx = 13;
+nx = 17;
 nu = 8;
-ref_path = SX.sym('ref_path',nx);
-%% State variables: position, quaternion, linear velocity, angular velocity
+ref_path = SX.sym('ref_path',13);
+thrust_health = SX.sym('thrust_health',nu);  % Thruster health state
+%% State variables: position, quaternion, velocity, and servo angles
 p = SX.sym('p',3);
 q = SX.sym('q',4);
 v = SX.sym('v',3);
 w = SX.sym('w',3);
-x = vertcat(p,q,v,w);   % [X,Y,Z, q0,q1,q2,q3, u,v,w, p,q,r]
-u = SX.sym('u', nu);    % Thruster control input
+theta = SX.sym('theta',4); % Servo angles
+x = vertcat(p,q,v,w,theta);   % [X,Y,Z, q0,q1,q2,q3, u,v,w, p,q,r, theta1..theta4]
+thr = SX.sym('thr',4);
+theta_dot = SX.sym('theta_dot',4); % Servo angular rates
+u = vertcat(thr,theta_dot);    % Thruster and servo control input
 xdot = SX.sym('xdot',nx);
 %% Model parameters
-m = 13.0;               % Mass (kg)
-zg = -0.011;            % Center of gravity z coordinate (m)
-xg=0.0;
-zb = -0.06;             % Center of buoyancy z coordinate (m)
-B = 141.635725;         % Buoyancy (N)
-W = 127.4;              % Weight (N)
-Xu = -5.5;              % Hydrodynamic coefficient
-Yv = -12.7;
-Zw = -14.57;
-Kp = -0.12;
-Mq = -0.12;
-Nr = -0.12;
-Im = [0.26, 0.23, 0.37];  % Moments of inertia
-D_l = [-4.03, -6.22, -5.18, -0.07, -0.07, -0.07];
-D_q = [-18.18, -21.66, -36.99, -1.55, -1.55, -1.55];
+m = 13.25;             % Mass (kg)
+zg = -0.00205876;      % Center of gravity z coordinate (m)
+zb = -0.03;            % Center of buoyancy z coordinate (m)
+xg = -0.00634838;
+B = 143.0;             % Buoyancy (N)
+W = 129.85;            % Weight (N)
+Xu = -8.7;             % Added mass coefficient
+Yv = -11.32;
+Zw = -20.68;
+Kp = -0.142;
+Mq = -0.268;
+Nr = -0.195;
+Im = [0.23337, 0.301, 0.4981];  % Moments of inertia
+% Paper magnitudes are stored with negative signs to match the model convention.
+D_l = [-0.387, -1.315, 0, -0.139, 0, -0.0854];
+D_q = [-30.379, -33.525, -117.412, -0.504, -0.602, -0.487];
 
-%% Thruster allocation matrix
-% 6x8 matrix mapping 8 thruster forces to 6-DOF force and moment.
-% Rows: [Fx, Fy, Fz, Mx, My, Mz] in the FRD frame.
-% Columns: thrusters 1-8.
-T = [
-    0.7071    0.7071   -0.7071   -0.7071         0         0         0         0;
-    -0.7071    0.7071   -0.7071    0.7071         0         0         0         0;
-    0         0         0         0   -1.0000    1.0000    1.0000   -1.0000;
-    0.0601   -0.0601    0.0601   -0.0601   -0.2180   -0.2180    0.2180    0.2180;
-    0.0601    0.0601   -0.0601   -0.0601    0.1200   -0.1200    0.1200   -0.1200;
-    -0.1888    0.1888    0.1888   -0.1888         0         0         0         0
-    ];
 %% Quaternion handling
 q_no = q / norm(q);  % Normalized quaternion
-% x(4:7) =q;
 q0 = q_no(1); q1 = q_no(2); q2 = q_no(3); q3 = q_no(4);
 
 %% Frame transforms
@@ -112,36 +104,44 @@ moment_buoyancy = [zb * buoyancy_b(2); % -r_cb(3) * buoyancy_b(2)
     -zb * buoyancy_b(1); %  r_cb(3) * buoyancy_b(1)
     0];                 %  0
 
-
 moment_restoring = moment_gravity + moment_buoyancy;
-
+lx1 = 0.18775;
+lx2 = 0.18275;
+ly = 0.260159;
+lz=0.020148429;
 % Restoring vector [Fx; Fy; Fz; Mx; My; Mz] in the body frame.
 g = [force_restoring; moment_restoring];
-
+tau = [ -sin(theta(1))*thr(1)-sin(theta(2))*thr(2)-sin(theta(3))*thr(3)-sin(theta(4))*thr(4);
+    0;
+    cos(theta(1))*thr(1)+cos(theta(2))*thr(2)+cos(theta(3))*thr(3)+cos(theta(4))*thr(4);
+    ly*(cos(theta(1))*thr(1)+cos(theta(2))*thr(2)-cos(theta(3))*thr(3)-cos(theta(4))*thr(4));
+    -cos(theta(1))*thr(1)*lx1+cos(theta(2))*thr(2)*lx2+cos(theta(3))*thr(3)*lx2-cos(theta(4))*thr(4)*lx1+sin(theta(1))*thr(1)*lz+sin(theta(2))*thr(2)*lz+sin(theta(3))*thr(3)*lz+sin(theta(4))*thr(4)*lz;
+    ly*(sin(theta(1))*thr(1)+sin(theta(2))*thr(2)-sin(theta(3))*thr(3)-sin(theta(4))*thr(4))];
 %% Dynamics
-forces = T*u - (CRB + CA)*[v;w] - g - D*[v;w];
+forces = tau - (CRB + CA)*[v;w] - g - D*[v;w];
 accel_b = (MRB + MA) \ forces;
 a_b =  accel_b(1:3);
 omega_dot = accel_b(4:6);
 v_n = R_b2n * v;
 %% State derivatives
-f_expl_expr = vertcat(v_n, ...         % Position derivative
+f_expl_expr = vertcat(  v_n, ...         % Position derivative
     T_q2n*w, ...      % Quaternion derivative
     a_b, ...          % Body-frame acceleration
-    omega_dot);       % Angular acceleration
+    omega_dot,...         % Angular acceleration
+    theta_dot);
 
 f_impl_expr = f_expl_expr - xdot;
 %% cost in nonlinear least squares form
 
-Q_pos = diag([120,120, 150]);    % Position error weight
-Q_att = diag([100, 100, 120]);   % Attitude imaginary-part error weight
-Q_vel = diag([1, 1, 1]);         % Linear velocity error weight
-Q_ang = diag([0.5, 0.5, 0.5]);   % Angular velocity error weight
-Q_fpos = 10*Q_pos;               % Terminal position error weight
-Q_fatt = 10*Q_att;               % Terminal attitude error weight
-Q_fvel = 10*Q_vel;               % Terminal linear velocity error weight
-Q_fang = 10*Q_ang;               % Terminal angular velocity error weight
-R = diag(0.1*ones(8,1));         % Control input weight
+Q_pos = diag([80,80, 200]);       % Position error weight
+Q_att = diag([250, 250, 300]);    % Attitude imaginary-part error weight
+Q_vel = diag([1, 1, 1]);          % Linear velocity error weight
+Q_ang = diag([1, 1, 1]);          % Angular velocity error weight
+Q_fpos = 10*Q_pos;                % Terminal position error weight
+Q_fatt = 10*Q_att;                % Terminal attitude error weight
+Q_fvel = 10*Q_vel;                % Terminal linear velocity error weight
+Q_fang = 10*Q_ang;                % Terminal angular velocity error weight
+R = diag([1,1,1,1,0.1,0.1,0.1,0.1]);          % Control input weight
 %% Quaternion multiplication helper, Hamilton product
 quatmultiply = @(q1, q2) [...
     q1(1)*q2(1) - q1(2)*q2(2) - q1(3)*q2(3) - q1(4)*q2(4);  % Scalar part
@@ -155,7 +155,7 @@ q_ref = ref_path(4:7);  % Reference attitude, expected normalized
 q_current = q/norm(q);  % Current attitude
 
 q_error = quatmultiply(q_ref, [q_current(1); -q_current(2:4)]);  % q_ref * q^{-1}
-att_error =2* q_error(2:4);  % Imaginary part
+att_error = q_error(2:4);  % Imaginary part
 % 1-N cost term
 cost_expr_ext_cost_0 = ...
     0.5*(x(1:3)-ref_path(1:3))'*Q_pos*(x(1:3)-ref_path(1:3)) + ...
@@ -170,19 +170,12 @@ cost_expr_ext_cost = ...
     0.5*(w-ref_path(11:13))'*Q_ang*(w-ref_path(11:13))+ ...
     0.5*u'*R*u;
 
-% final cost term
-
 %% Terminal cost
 cost_expr_ext_cost_e = ...
     0.5*(x(1:3)-ref_path(1:3))'*Q_fpos*(x(1:3)-ref_path(1:3)) + ...
     0.5*(att_error)'*Q_fatt*(att_error) + ...
     0.5*(v-ref_path(8:10))'*Q_fvel*(v-ref_path(8:10))+ ...
     0.5*(w-ref_path(11:13))'*Q_fang*(w-ref_path(11:13));
-cost_expr_ext_cost_custom_hess = blkdiag(R,Q_pos,0,Q_att,Q_vel,Q_ang);
-cost_expr_ext_cost_custom_hess_e = blkdiag(Q_fpos,0,Q_fatt,Q_fvel,Q_fang);
-
-
-
 
 %% Build model
 model = AcadosModel();
@@ -195,6 +188,5 @@ model.f_impl_expr = f_impl_expr;
 model.cost_expr_ext_cost_0 = cost_expr_ext_cost_0;
 model.cost_expr_ext_cost = cost_expr_ext_cost;
 model.cost_expr_ext_cost_e = cost_expr_ext_cost_e;
-model.name = 'BlueROV_Heavy';
-
+model.name = 'subcat';
 end

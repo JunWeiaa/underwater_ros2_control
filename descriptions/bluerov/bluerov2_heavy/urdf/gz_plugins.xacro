@@ -31,12 +31,12 @@
       <thruster_num>8</thruster_num>
     </plugin>
   </gazebo>
-    <!-- ros2_control系统 -->
+    <!-- ros2_control system -->
     <ros2_control name="GazeboSimSystem" type="system">
       <hardware>
         <plugin>gz_underwater_hardware/GazeboSimSystem</plugin>
       </hardware>
-      <!-- 8个推进器joint接口，建议用xacro宏 -->
+      <!-- Thruster joint interfaces -->
       <xacro:macro name="thruster_control_interface" params="num">
         <joint name="thruster${num}_joint">
           <command_interface name="velocity"/>

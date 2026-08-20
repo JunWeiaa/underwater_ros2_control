@@ -3,8 +3,9 @@
 <package format="3">
     <name>keyboard_input</name>
     <version>0.0.0</version>
-    <description>TODO: Package description</description>
-    <maintainer email="biao876990970@hotmail.com">biao</maintainer>
+    <description>Keyboard teleoperation command node for publishing manual control inputs to underwater robot controllers.</description>
+    <maintainer email="weijunn@hnu.edu.cn">Jun Wei</maintainer>
+    <author email="weijunn@hnu.edu.cn">Jun Wei</author>
     <license>Apache-2.0</license>
 
     <buildtool_depend>ament_cmake</buildtool_depend>

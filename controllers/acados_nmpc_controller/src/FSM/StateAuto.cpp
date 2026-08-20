@@ -111,7 +111,7 @@ void StateAuto::enter() {
                 {
                     std::lock_guard<std::mutex> lock(u0_mutex_);
                     opt_failed_ = true;
-                    u0 = default_u0; // 使用默认值
+                    u0 = default_u0;
                     ctrl_component_->observation_.input = u0;
                     u0_updated_ = true;
                 }
@@ -150,13 +150,13 @@ void StateAuto::run(const rclcpp::Time & /**time**/,
         std::lock_guard<std::mutex> lock(u0_mutex_);
         if (opt_failed_) {
             RCLCPP_WARN(node_->get_logger(), "Optimization failed, using default control input.");
-            current_u0 = default_u0; // 使用默认值
+            current_u0 = default_u0;
         } else if (u0_updated_) {
             current_u0 = u0;
-            u0_updated_ = false; // 重置标志位
+            u0_updated_ = false;
         } else {
             // RCLCPP_WARN(node_->get_logger(), "u0 not updated, using previous value.");
-            current_u0 = u0; // 使用上一次的值
+            current_u0 = u0;
         }
     }
 

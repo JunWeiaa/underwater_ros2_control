@@ -1,7 +1,3 @@
-//
-// Created by biao on 24-9-11.
-//
-
 #ifndef KEYBOARDINPUT_H
 #define KEYBOARDINPUT_H
 #include <rclcpp/rclcpp.hpp>

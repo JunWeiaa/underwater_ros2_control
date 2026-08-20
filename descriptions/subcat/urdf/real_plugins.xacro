@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <robot xmlns:xacro="http://ros.org/wiki/xacro">
-    <!-- ros2_control系统 -->
+    <!-- ros2_control system -->
     <ros2_control name="RealSystem" type="system">
       <hardware>
         <plugin>real_underwater_hardware/RealSystem</plugin>
@@ -21,7 +21,7 @@
         <param name="servo_timeout_ms">100</param>
         <param name="servo_duration_ms">10</param>
       </hardware>
-      <!-- 8个推进器joint接口，建议用xacro宏 -->
+      <!-- Thruster joint interfaces -->
      <xacro:macro name="thruster_control_interface" params="num">
         <joint name="thruster${num}_joint">
           <command_interface name="thrust"/>

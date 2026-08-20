@@ -1,10 +1,10 @@
 <package format="2">
     <name>subcat</name>
     <version>1.0.0</version>
-    <description>Configuration data, 3D models and launch files for subcat.</description>
-    <author>TODO</author>
-    <maintainer email="TODO@email.com">TODO</maintainer>
-    <license>BSD</license>
+    <description>Robot description, meshes, controller configuration, and launch files for the Subcat underwater robot.</description>
+    <author email="weijunn@hnu.edu.cn">Jun Wei</author>
+    <maintainer email="weijunn@hnu.edu.cn">Jun Wei</maintainer>
+    <license>Apache-2.0</license>
 
     <buildtool_depend>ament_cmake</buildtool_depend>
 

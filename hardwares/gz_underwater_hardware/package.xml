@@ -2,11 +2,11 @@
 <package format="3">
   <name>gz_underwater_hardware</name>
   <version>2.0.6</version>
-  <description>Gazebo ros2_control package for underwater robot.</description>
+  <description>Gazebo Sim ros2_control hardware interface and plugin for underwater robot simulation.</description>
 
-  <maintainer email="wjun@todo.todo">wjun</maintainer>
+  <maintainer email="weijunn@hnu.edu.cn">Jun Wei</maintainer>
   <license>Apache-2.0</license>
-  <author>wjun</author>
+  <author email="weijunn@hnu.edu.cn">Jun Wei</author>
 
   <buildtool_depend>ament_cmake</buildtool_depend>
 

@@ -1,8 +1,8 @@
 <?xml version="1.0"?>
 <robot xmlns:xacro="http://ros.org/wiki/xacro">
-  <!-- 8个推进器link和joint，建议用xacro宏简化 -->
+  <!-- Thruster link and joint macro -->
   <xacro:macro name="thruster" params="num pose mesh_uri mesh_rpy joint_axis joint_xyz joint_effort joint_velocity">
-    <!-- pose: x y z r p y (joint的origin) -->
+    <!-- pose: x y z roll pitch yaw for the joint origin -->
     <xacro:property name="pose_list" value="${pose.split(' ')}"/>
     <link name="thruster${num}">
       <inertial>
@@ -32,7 +32,7 @@
     </joint>
   </xacro:macro>
 
-  <!-- 实例化8个推进器，mesh_rpy参数与SDF visual/pose一致，scale与SDF一致 -->
+  <!-- Thruster instances with poses matching the SDF visual configuration -->
   <xacro:thruster num="1" pose="0.14 -0.092 0.0 -1.571 1.571 -0.785" mesh_uri="package://bluerov2_heavy/meshes/t200_ccw_prop.dae" mesh_rpy="-1.571 0 0" joint_axis="revolute" joint_xyz="0 0 1" joint_effort="40" joint_velocity="400"/>
   <xacro:thruster num="2" pose="0.14 0.092 0.0 -1.571 1.571 -2.356" mesh_uri="package://bluerov2_heavy/meshes/t200_ccw_prop.dae" mesh_rpy="-1.571 0 0" joint_axis="revolute" joint_xyz="0 0 1" joint_effort="40" joint_velocity="400"/>
   <xacro:thruster num="3" pose="-0.14 -0.092 0.0 -1.571 1.571 0.785" mesh_uri="package://bluerov2_heavy/meshes/t200_cw_prop.dae" mesh_rpy="1.571 0 0" joint_axis="revolute" joint_xyz="0 0 1" joint_effort="1000" joint_velocity="400"/>

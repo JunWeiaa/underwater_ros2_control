@@ -3,8 +3,9 @@
 <package format="3">
   <name>acados_nmpc_controller</name>
   <version>0.0.0</version>
-  <description>TODO: Package description</description>
-  <maintainer email="wjun@todo.todo">wjun</maintainer>
+  <description>ROS 2 control nonlinear model predictive controller for underwater robots using generated acados solvers.</description>
+  <maintainer email="weijunn@hnu.edu.cn">Jun Wei</maintainer>
+  <author email="weijunn@hnu.edu.cn">Jun Wei</author>
   <license>Apache-2.0</license>
 
   <buildtool_depend>ament_cmake</buildtool_depend>
