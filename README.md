@@ -183,3 +183,21 @@ dependencies for their own license terms.
 This project was inspired by
 [legubiao/quadruped_ros2_control](https://github.com/legubiao/quadruped_ros2_control)
 and adapted for underwater robot simulation, control, and hardware integration.
+
+## Citation
+
+If this project or the SubCat robot model helps your research, a citation would
+be greatly appreciated:
+
+```bibtex
+@ARTICLE{11661758,
+  author={Wei, Jun and Miao, Zhiqiang and Chen, Yizong and Liu, Xinjiang and Wang, Yaonan},
+  journal={IEEE Robotics and Automation Letters},
+  title={SubCat: Design and Control of a Vectored-Thrust Underwater Robot with Model Predictive Control},
+  year={2026},
+  volume={},
+  number={},
+  pages={1-8},
+  doi={10.1109/LRA.2026.3726326}
+}
+```
