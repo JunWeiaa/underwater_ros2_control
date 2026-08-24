@@ -9,6 +9,14 @@ can send actuator commands through MAVROS RC override and serial servos, so use
 it only with an emergency stop, actuator limits, removed propellers, or a
 controlled test tank.
 
+## Real-World Experiments
+
+<p align="center">
+  <img src="docs/images/underwater_ros2_control_demo_1.gif" alt="Underwater robot close view" width="32%">
+  <img src="docs/images/underwater_ros2_control_demo_2.gif" alt="6DOF trajectory tracking" width="32%">
+  <img src="docs/images/underwater_ros2_control_demo_3.gif" alt="Pool test overview" width="32%">
+</p>
+
 ## Packages
 
 ```text
