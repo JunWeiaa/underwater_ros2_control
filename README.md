@@ -1,13 +1,13 @@
 # underwater_ros2_control
 
-ROS 2 control stack for underwater robots. The repository combines Gazebo
+ROS 2 control framework for underwater robots. The repository combines Gazebo
 simulation, `ros2_control` hardware interfaces, acados NMPC control, keyboard
-teleoperation, and robot descriptions for BlueROV2 Heavy and Subcat.
+teleoperation, and robot descriptions for BlueROV2 Heavy and SubCat. The framework
+can also be extended to other underwater robots by adding new robot
+descriptions, controller parameters, and generated acados solvers.
 
-This project is a research and engineering prototype. The real-hardware backend
-can send actuator commands through MAVROS RC override and serial servos, so use
-it only with an emergency stop, actuator limits, removed propellers, or a
-controlled test tank.
+For readers interested in reproducing the SubCat hardware, please refer to the
+[subcat-hw](https://github.com/JunWeiaa/subcat-hw) repository.
 
 ## Real-World Experiments
 
@@ -24,7 +24,7 @@ underwater_ros2_control/
 |-- command/keyboard_input/              # Keyboard command node
 |-- controllers/acados_nmpc_controller/  # NMPC ros2_control controller
 |-- descriptions/bluerov/bluerov2_heavy/ # BlueROV2 Heavy model and launch files
-|-- descriptions/subcat/                 # Subcat model and launch files
+|-- descriptions/subcat/                 # SubCat model and launch files
 |-- hardwares/gz_underwater_hardware/    # Gazebo underwater hardware interface
 |-- hardwares/real_underwater_hardware/  # MAVROS and serial hardware interface
 |-- docs/launch_guide.md                 # Launch examples and quick checks
@@ -101,7 +101,7 @@ dependencies are not installed.
 
 ## Run
 
-Single Subcat simulation:
+Single SubCat simulation:
 
 ```bash
 ros2 launch subcat gz.launch.py \

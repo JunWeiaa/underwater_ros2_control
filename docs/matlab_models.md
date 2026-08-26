@@ -90,7 +90,7 @@ source env.sh
 matlab -batch "main"
 ```
 
-## Subcat
+## SubCat
 
 Path:
 

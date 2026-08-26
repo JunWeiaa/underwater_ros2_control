@@ -29,7 +29,7 @@ ros2 launch bluerov2_heavy gz.launch.py \
   merge_tf:=true
 ```
 
-## Single Subcat
+## Single SubCat
 
 Recommended namespace is `sub1`, so the command topics are `/sub1/control_input` and `/sub1/cmd_vel`.
 
@@ -76,7 +76,7 @@ ros2 launch bluerov2_heavy gz.launch.py \
 
 `start_gz:=auto`, `start_rviz:=auto`, and `bridge_clock:=auto` are the defaults. The second launch should reuse the existing Gazebo, RViz, and `/clock`.
 
-## Two Subcat Robots
+## Two SubCat Robots
 
 Terminal 1:
 
@@ -106,9 +106,9 @@ ros2 launch subcat gz.launch.py \
   merge_tf:=true
 ```
 
-The second Subcat launch also reuses existing Gazebo, RViz, and `/clock` by default.
+The second SubCat launch also reuses existing Gazebo, RViz, and `/clock` by default.
 
-## Mixed BlueROV2 Heavy And Subcat
+## Mixed BlueROV2 Heavy And SubCat
 
 Terminal 1:
 
@@ -153,7 +153,7 @@ ros2 launch bluerov2_heavy real.launch.py \
   merge_tf:=true
 ```
 
-## Real Subcat
+## Real SubCat
 
 MAVROS plus serial servos:
 
@@ -187,14 +187,14 @@ ros2 launch keyboard_input keyboard.launch.py \
   robots:=rov1,rov2
 ```
 
-For Subcat:
+For SubCat:
 
 ```bash
 ros2 launch keyboard_input keyboard.launch.py \
   robots:=sub1,sub2
 ```
 
-For one BlueROV2 Heavy and one Subcat:
+For one BlueROV2 Heavy and one SubCat:
 
 ```bash
 ros2 launch keyboard_input keyboard.launch.py \
