@@ -17,6 +17,13 @@ For readers interested in reproducing the SubCat hardware, please refer to the
   <img src="docs/images/underwater_ros2_control_demo_3.gif" alt="Pool test overview" width="32%">
 </p>
 
+## Simulation Experiments
+
+<p align="center">
+  <img src="docs/images/gazebo_subcat_bluerov.gif" alt="SubCat and BlueROV2 Heavy Gazebo simulation" width="48%">
+  <img src="docs/images/gazebo_three_bluerov.gif" alt="Three BlueROV2 Heavy robots in Gazebo" width="48%">
+</p>
+
 ## Packages
 
 ```text
@@ -27,7 +34,8 @@ underwater_ros2_control/
 |-- descriptions/subcat/                 # SubCat model and launch files
 |-- hardwares/gz_underwater_hardware/    # Gazebo underwater hardware interface
 |-- hardwares/real_underwater_hardware/  # MAVROS and serial hardware interface
-|-- docs/launch_guide.md                 # Launch examples and quick checks
+|-- docs/gz_launch_guide.md              # Gazebo launch examples and quick checks
+|-- docs/real_launch_guide.md            # Real-hardware launch and localization notes
 |-- docs/matlab_models.md                # MATLAB/acados model workflow
 `-- LICENSE
 ```
@@ -127,8 +135,9 @@ ros2 launch bluerov2_heavy gz.launch.py \
   merge_tf:=true
 ```
 
-More simulation, multi-robot, real-hardware, keyboard, and debug commands are in
-[docs/launch_guide.md](docs/launch_guide.md).
+More simulation, multi-robot, keyboard, and debug commands are in
+[docs/gz_launch_guide.md](docs/gz_launch_guide.md). Real-hardware launch notes
+are in [docs/real_launch_guide.md](docs/real_launch_guide.md).
 
 ## Keyboard Control
 
@@ -175,10 +184,9 @@ regenerating robot MATLAB/acados models.
 
 ## License and Acknowledgements
 
-The root repository is licensed under the [Apache License 2.0](LICENSE). Some
-description packages currently declare BSD in their `package.xml` files. Check
-third-party models, meshes, MATLAB/acados generated code, and upstream
-dependencies for their own license terms.
+The root repository and ROS 2 packages are licensed under the
+[Apache License 2.0](LICENSE). Third-party models, meshes, MATLAB/acados
+generated code, and upstream dependencies may carry their own license terms.
 
 This project was inspired by
 [legubiao/quadruped_ros2_control](https://github.com/legubiao/quadruped_ros2_control)

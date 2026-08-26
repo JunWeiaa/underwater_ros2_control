@@ -1,6 +1,6 @@
-# Launch Guide
+# Simulation Launch Guide
 
-All commands below assume the workspace root is:
+All commands below are for Gazebo simulation and assume the workspace root is:
 
 ```bash
 cd ~/underwater_ws
@@ -10,13 +10,19 @@ source install/setup.bash
 After rebuilding packages, source again:
 
 ```bash
-colcon build --symlink-install --packages-select acados_nmpc_controller gz_underwater_hardware real_underwater_hardware bluerov2_heavy subcat keyboard_input
+colcon build --symlink-install --packages-select \
+  acados_nmpc_controller \
+  gz_underwater_hardware \
+  bluerov2_heavy \
+  subcat \
+  keyboard_input
 source install/setup.bash
 ```
 
 ## Single BlueROV2 Heavy
 
-Recommended namespace is `rov1`, so the command topics are `/rov1/control_input` and `/rov1/cmd_vel`.
+Recommended namespace is `rov1`, so the command topics are
+`/rov1/control_input` and `/rov1/cmd_vel`.
 
 ```bash
 ros2 launch bluerov2_heavy gz.launch.py \
@@ -31,7 +37,8 @@ ros2 launch bluerov2_heavy gz.launch.py \
 
 ## Single SubCat
 
-Recommended namespace is `sub1`, so the command topics are `/sub1/control_input` and `/sub1/cmd_vel`.
+Recommended namespace is `sub1`, so the command topics are
+`/sub1/control_input` and `/sub1/cmd_vel`.
 
 ```bash
 ros2 launch subcat gz.launch.py \
@@ -74,7 +81,9 @@ ros2 launch bluerov2_heavy gz.launch.py \
   merge_tf:=true
 ```
 
-`start_gz:=auto`, `start_rviz:=auto`, and `bridge_clock:=auto` are the defaults. The second launch should reuse the existing Gazebo, RViz, and `/clock`.
+`start_gz:=auto`, `start_rviz:=auto`, and `bridge_clock:=auto` are the
+defaults. The second launch should reuse the existing Gazebo, RViz, and
+`/clock`.
 
 ## Two SubCat Robots
 
@@ -106,7 +115,8 @@ ros2 launch subcat gz.launch.py \
   merge_tf:=true
 ```
 
-The second SubCat launch also reuses existing Gazebo, RViz, and `/clock` by default.
+The second SubCat launch also reuses existing Gazebo, RViz, and `/clock` by
+default.
 
 ## Mixed BlueROV2 Heavy And SubCat
 
@@ -138,43 +148,13 @@ ros2 launch subcat gz.launch.py \
   merge_tf:=true
 ```
 
-You can reverse the order. The first launch starts Gazebo/RViz/`/clock`; the second launch reuses them by default.
-
-## Real BlueROV2 Heavy
-
-MAVROS mode:
-
-```bash
-ros2 launch bluerov2_heavy real.launch.py \
-  robot_name:=bluerov2_heavy \
-  robot_namespace:=rov1 \
-  mavros_namespace:=/mavros \
-  rviz_config:=single \
-  merge_tf:=true
-```
-
-## Real SubCat
-
-MAVROS plus serial servos:
-
-```bash
-ros2 launch subcat real.launch.py \
-  robot_name:=subcat \
-  robot_namespace:=sub1 \
-  mavros_namespace:=/mavros \
-  servo0_port:=/dev/ttyACM1 \
-  servo1_port:=/dev/ttyACM2 \
-  servo2_port:=/dev/ttyACM3 \
-  servo3_port:=/dev/ttyACM4 \
-  rviz_config:=single \
-  merge_tf:=true
-```
-
-For multiple real robots, give each robot a unique `robot_namespace`, `robot_name`, TF prefix, and hardware/MAVROS connection.
+You can reverse the order. The first launch starts Gazebo/RViz/`/clock`; the
+second launch reuses them by default.
 
 ## Keyboard Control
 
-Auto-detect current robots from `/<robot_namespace>/control_input` and `/<robot_namespace>/cmd_vel`:
+Auto-detect current robots from `/<robot_namespace>/control_input` and
+`/<robot_namespace>/cmd_vel`:
 
 ```bash
 ros2 launch keyboard_input keyboard.launch.py
@@ -234,8 +214,9 @@ Q/E      yaw left/right
 
 ## Quick Checks
 
-If a fresh single-robot launch unexpectedly prints `/clock already exists; skipping Gazebo launch`,
-check for an old Gazebo process before launching again:
+If a fresh single-robot launch unexpectedly prints
+`/clock already exists; skipping Gazebo launch`, check for an old Gazebo process
+before launching again:
 
 ```bash
 pgrep -af "gz sim"

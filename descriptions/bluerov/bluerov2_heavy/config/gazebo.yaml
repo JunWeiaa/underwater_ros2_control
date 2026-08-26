@@ -1,7 +1,7 @@
 # Controller Manager configuration
 controller_manager:
   ros__parameters:
-    update_rate: 1000  # ros2_control read/update/write loop Hz
+    update_rate: 1000 # ros2_control read/update/write loop Hz
 
     # Define the available controllers
     joint_state_broadcaster:
@@ -13,7 +13,6 @@ controller_manager:
     acados_nmpc_controller:
       type: acados_nmpc_controller/Acados_NMPC_Controller
 
-
 imu_sensor_broadcaster:
   ros__parameters:
     sensor_name: "imu_sensor"
@@ -21,9 +20,9 @@ imu_sensor_broadcaster:
 
 acados_nmpc_controller:
   ros__parameters:
-    update_rate: 1000  # controller update/write Hz
+    update_rate: 1000 # controller update/write Hz
     mpc:
-      frequency: 200.0  # acados solve Hz
+      frequency: 200.0 # acados solve Hz
     manual:
       enforce_path_constraints: false
     debug:
@@ -37,13 +36,35 @@ acados_nmpc_controller:
       input_lower: [-40.0, -40.0, -40.0, -40.0, -40.0, -40.0, -40.0, -40.0]
       input_upper: [40.0, 40.0, 40.0, 40.0, 40.0, 40.0, 40.0, 40.0]
       path_lower: [0.0, 0.0, 0.0, 0.0, 0.0, 0.0]
-      path_upper: [10000000.0, 10000000.0, 10000000.0, 10000000.0, 10000000.0, 10000000.0]
+      path_upper:
+        [10000000.0, 10000000.0, 10000000.0, 10000000.0, 10000000.0, 10000000.0]
       global_parameters: [1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0]
     control_output_map:
-      joints: [thruster1_joint, thruster2_joint, thruster3_joint, thruster4_joint, thruster5_joint, thruster6_joint, thruster7_joint, thruster8_joint]
-      interfaces: [thrust, thrust, thrust, thrust, thrust, thrust, thrust, thrust]
+      joints:
+        [
+          thruster1_joint,
+          thruster2_joint,
+          thruster3_joint,
+          thruster4_joint,
+          thruster5_joint,
+          thruster6_joint,
+          thruster7_joint,
+          thruster8_joint,
+        ]
+      interfaces:
+        [thrust, thrust, thrust, thrust, thrust, thrust, thrust, thrust]
       input_indices: [0, 1, 2, 3, 4, 5, 6, 7]
-      modes: [absolute, absolute, absolute, absolute, absolute, absolute, absolute, absolute]
+      modes:
+        [
+          absolute,
+          absolute,
+          absolute,
+          absolute,
+          absolute,
+          absolute,
+          absolute,
+          absolute,
+        ]
       state_indices: [-1, -1, -1, -1, -1, -1, -1, -1]
       scales: [1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0]
       offsets: [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]
@@ -53,7 +74,7 @@ acados_nmpc_controller:
     trajectory:
       source: "file"
       target_file: ""
-      target_name: "figure8"
+      target_name: "circle"
       path_frame: "odom"
       dt: 0.001
       prediction_dt: 0.025
@@ -107,5 +128,3 @@ acados_nmpc_controller:
       - linear_acceleration.x
       - linear_acceleration.y
       - linear_acceleration.z
-
- 
