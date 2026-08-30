@@ -19,6 +19,11 @@ colcon build --symlink-install --packages-select \
 source install/setup.bash
 ```
 
+## Gazebo Model Assets
+
+The bundled `axes` and `sand_heightmap` Gazebo models are mirrored from
+[clydemcqueen/bluerov2_gz](https://github.com/clydemcqueen/bluerov2_gz).
+
 ## Single BlueROV2 Heavy
 
 Recommended namespace is `rov1`, so the command topics are

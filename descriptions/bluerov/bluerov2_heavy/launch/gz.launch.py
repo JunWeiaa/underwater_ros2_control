@@ -47,6 +47,24 @@ def _set_child_text(parent, tag, text):
     return child
 
 
+def _prepend_env_path(name, path):
+    entries = [
+        entry for entry in os.environ.get(name, "").split(os.pathsep) if entry
+    ]
+    if path not in entries:
+        os.environ[name] = os.pathsep.join([path] + entries)
+
+
+def _sync_sdf_path_from_gz():
+    entries = [
+        entry
+        for entry in os.environ.get("GZ_SIM_RESOURCE_PATH", "").split(os.pathsep)
+        if entry
+    ]
+    for entry in reversed(entries):
+        _prepend_env_path("SDF_PATH", entry)
+
+
 def _build_spawn_sdf(
     sdf_template_file,
     robot_name,
@@ -500,14 +518,9 @@ def launch_setup(context, *args, **kwargs):
     xacro_file = os.path.join(pkg_path, "urdf", "bluerov2_heavy_gz.xacro")
     robot_description = xacro.process_file(xacro_file).toxml()
 
-    # Gazebo spawn still uses SDF. Keep SDF search path handling independent from RViz description mode.
-    if "GZ_SIM_RESOURCE_PATH" in os.environ:
-        gz_sim_resource_path = os.environ["GZ_SIM_RESOURCE_PATH"]
-        if "SDF_PATH" in os.environ:
-            sdf_path = os.environ["SDF_PATH"]
-            os.environ["SDF_PATH"] = sdf_path + ":" + gz_sim_resource_path
-        else:
-            os.environ["SDF_PATH"] = gz_sim_resource_path
+    models_path = os.path.join(pkg_path, "models")
+    _prepend_env_path("GZ_SIM_RESOURCE_PATH", models_path)
+    _sync_sdf_path_from_gz()
 
     bridge_yaml_content = _build_bridge_yaml(
         robot_name,

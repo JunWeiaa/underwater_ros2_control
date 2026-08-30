@@ -48,6 +48,24 @@ def _set_child_text(parent, tag, text):
     return child
 
 
+def _prepend_env_path(name, path):
+    entries = [
+        entry for entry in os.environ.get(name, "").split(os.pathsep) if entry
+    ]
+    if path not in entries:
+        os.environ[name] = os.pathsep.join([path] + entries)
+
+
+def _sync_sdf_path_from_gz():
+    entries = [
+        entry
+        for entry in os.environ.get("GZ_SIM_RESOURCE_PATH", "").split(os.pathsep)
+        if entry
+    ]
+    for entry in reversed(entries):
+        _prepend_env_path("SDF_PATH", entry)
+
+
 def _write_temp_file(prefix, suffix, content):
     fd, file_path = tempfile.mkstemp(prefix=prefix, suffix=suffix)
     with os.fdopen(fd, "w") as output_file:
@@ -484,6 +502,10 @@ def launch_setup(context, *args, **kwargs):
         odom_frame,
         base_frame,
     )
+
+    models_path = os.path.join(pkg_path, "models")
+    _prepend_env_path("GZ_SIM_RESOURCE_PATH", models_path)
+    _sync_sdf_path_from_gz()
 
     bridge_yaml_content = _build_bridge_yaml(
         robot_name,

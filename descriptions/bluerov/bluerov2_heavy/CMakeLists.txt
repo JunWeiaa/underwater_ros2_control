@@ -4,7 +4,7 @@ project(bluerov2_heavy)
 find_package(ament_cmake REQUIRED)
 
 install(
-		DIRECTORY meshes launch config sdf worlds urdf matlab
+		DIRECTORY meshes launch config sdf worlds urdf matlab models
 		DESTINATION share/${PROJECT_NAME}/
 )
 

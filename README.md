@@ -195,6 +195,9 @@ regenerating robot MATLAB/acados models.
 The root repository and ROS 2 packages are licensed under the
 [Apache License 2.0](LICENSE). Third-party models, meshes, MATLAB/acados
 generated code, and upstream dependencies may carry their own license terms.
+The bundled `axes` and `sand_heightmap` Gazebo models are mirrored from
+[clydemcqueen/bluerov2_gz](https://github.com/clydemcqueen/bluerov2_gz), and
+the original texture source note is kept with the `sand_heightmap` model.
 
 This project was inspired by
 [legubiao/quadruped_ros2_control](https://github.com/legubiao/quadruped_ros2_control)
