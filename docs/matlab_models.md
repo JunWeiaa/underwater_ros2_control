@@ -35,6 +35,13 @@ export ACADOS_INSTALL_DIR=$HOME/acados
 export LD_LIBRARY_PATH=$ACADOS_INSTALL_DIR/lib:$LD_LIBRARY_PATH
 ```
 
+GCC builds use `libgomp` from the GCC toolchain. If MATLAB/acados MEX is built
+with Clang, install OpenMP first:
+
+```bash
+sudo apt install -y libomp-dev
+```
+
 The official acados MATLAB/Octave setup guide is:
 [MATLAB + Simulink and Octave Interface](https://docs.acados.org/matlab_octave_interface/index.html).
 Use it for MATLAB path, CasADi, MEX, and platform-specific setup details while

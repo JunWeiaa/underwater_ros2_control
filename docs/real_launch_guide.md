@@ -19,6 +19,13 @@ colcon build --symlink-install --packages-select \
 source install/setup.bash
 ```
 
+GCC builds use `libgomp` from the GCC toolchain. If building with Clang, install
+OpenMP first:
+
+```bash
+sudo apt install -y libomp-dev
+```
+
 ## Localization Requirement
 
 The real launch files start `ros2_control`, the real hardware interface, robot

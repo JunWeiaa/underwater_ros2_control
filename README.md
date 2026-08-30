@@ -48,6 +48,7 @@ Recommended environment:
 - ROS 2 Jazzy
 - Gazebo Harmonic / `ros_gz`
 - `colcon`, `rosdep`, and `ament_cmake`
+- OpenMP support from the selected compiler
 - acados v0.4.5, with `ACADOS_INSTALL_DIR` set
 
 Main runtime packages include `controller_manager`, `hardware_interface`,
@@ -77,6 +78,13 @@ mkdir -p build
 cd build
 cmake -DACADOS_INSTALL_DIR=$HOME/acados ..
 cmake --build . --target install -j$(nproc)
+```
+
+GCC uses `libgomp`, which is normally installed with the GCC toolchain. If you
+build acados or this workspace with Clang, install OpenMP separately:
+
+```bash
+sudo apt install -y libomp-dev
 ```
 
 Export the acados environment before building or running the controller:
